@@ -1,0 +1,404 @@
+DATA GENERATION FRAMEWORK - INSTRUCTIONS & RULES
+
+OVERVIEW
+1. Generates test data from OpenAPI specifications
+2. Define generator rules once, apply consistently across all parameters
+3. Ensures reliable, reusable, and maintainable test data creation
+4. All generators must follow mandatory rules for compliance
+
+SECTION 1: CORE RULES FOR ALL GENERATORS
+
+FUNDAMENTAL RULES
+1. SPECIFY TYPE
+   a. Every generator must declare a "type" property
+   b. Valid types: dynamic, remote, static, reference, conditional
+   c. Example: { "type": "static", "value": "OPEN" }
+   d. Type determines how data is generated
+
+2. USE ARRAYS
+   a. Wrap each generator in [ ] brackets
+   b. Use even for single generators
+   c. Correct: "status": [ { "type": "static", "value": "OPEN" } ]
+   d. Incorrect: "status": { "type": "static", "value": "OPEN" }
+
+3. USE SNAKE_CASE NAMING
+   a. Use lowercase with underscores
+   b. IDs must end with "_id"
+   c. Examples: agent_id, ticket_status, created_timestamp
+   d. Avoid camelCase, UPPERCASE, or generic names
+
+NAMING CONVENTIONS
+1. Pattern examples for different scenarios
+   a. agent_id - Generic agent reference
+   b. active_agent_id - Agent with ACTIVE status filter
+   c. created_ticket_id - Ticket created by operation
+   d. updated_contact_id - Contact updated by operation
+
+2. Naming guidelines
+   a. Start with base entity name (agent, ticket, contact)
+   b. Add status or filter if applicable (active_, open_, closed_)
+   c. Add operation if applicable (created_, updated_, deleted_)
+   d. Avoid vague names (id1, data, temp, var, test1)
+   e. Ensure consistency across all generator files
+
+3. Benefits of good naming
+   a. Easy to understand intent
+   b. Easy to find in code
+   c. Reduces errors when updating
+   d. Self-documenting without comments
+
+REFERENCES
+
+Same File References
+1. Format: "#/generators/generator_name"
+   a. Use for generators in same file
+   b. Example: "agentId": "#/generators/agent_id"
+   c. Useful for reusing generators within file
+   d. Simpler than cross-file references
+
+Different File References
+1. Format: "../EntityName/test_data_generation_configurations.json#/generators/name"
+   a. Use for generators in different entity files
+   b. Example: "agentId": "../Agent/test_data_generation_configurations.json#/generators/agent_id"
+   c. Enable reusing generators across entities
+   d. Prevents duplication
+
+Array Parameters (Multiple Values)
+1. Format: "parameterName[*]": "#/generators/name"
+   a. [*] suffix means use all generator values
+   b. Example: "agentIds[*]": "#/generators/agent_id"
+   c. Use when parameter accepts array
+   d. Ensures consistency across array elements
+
+JSONPATH FORMAT
+
+Path Format: $.location:$.path
+
+1. Location types
+   a. $.response.body - Response JSON structure
+   b. $.input.body - Request body JSON
+   c. $.input.query - Query string parameters
+   d. $.input.path - URL path parameters
+   e. $.input.header - HTTP request headers
+
+2. Path patterns
+   a. $.data[*].id - All IDs from array
+   b. $.data[0].id - First element only
+   c. $.manager.id - Nested object field
+   d. $.parent.child.id - Deep nesting multiple levels
+
+SECTION 2: GENERATOR TYPES
+
+FIVE TYPES OF GENERATORS
+
+TYPE 1: DYNAMIC - FETCH FROM API RESPONSES
+1. Purpose: Retrieve IDs from API responses
+2. When to use
+   a. Need actual system data
+   b. Want realistic test data
+   c. Validating with live IDs
+   d. Testing with current data
+
+3. Required properties
+   a. type - String "dynamic"
+   b. generatorOperationId - API operation name
+   c. dataPath - Path to extract in response
+
+4. Optional properties
+   a. params - Filter API results (e.g., {"status": "ACTIVE"})
+   b. name - Generator identifier
+
+5. Rules
+   a. Specify which API operation to call
+   b. Use dataPath to select exact data
+   c. Use [*] for all elements, [0] for first only
+   d. Use params to filter results
+   e. Test API call manually first
+
+6. Example
+   {
+     "type": "dynamic",
+     "generatorOperationId": "support.Agent.getAgents",
+     "dataPath": "$.response.body:$.data[*].id",
+     "params": {"status": "ACTIVE"}
+   }
+
+TYPE 2: REMOTE - CALL SYSTEM FUNCTIONS
+1. Purpose: Call system functions (timestamps, enums)
+2. When to use
+   a. Need generated timestamps
+   b. Getting enumeration values
+   c. Need system configuration data
+   d. Calling custom utility functions
+
+3. Required properties
+   a. type - String "remote"
+   b. generatorMethod - System function to call
+   c. inputs - Function parameters
+
+4. Optional properties
+   a. name - Generator identifier
+
+5. Rules
+   a. Always provide format for timestamps
+   b. Use correct timeLine: current, future, past
+   c. Include orgId when required
+   d. Use UTC timezone (Z suffix)
+   e. Verify field names in OpenAPI spec
+
+6. Common system methods
+   a. getDateTime
+      - Parameters: timeLine, format
+      - Generate timestamps
+   b. getDynamicEnumValues
+      - Parameters: fieldName, moduleName, orgId
+      - Get enumeration values
+   c. getCustomFieldSchema
+      - Parameters: fieldType, schemaName
+      - Get field structure
+
+7. Timestamp format: yyyy-MM-dd'T'HH:mm:ss.SSS'Z'
+   a. yyyy = Year (2024)
+   b. MM = Month (01-12)
+   c. dd = Day (01-31)
+   d. HH = Hour (00-23)
+   e. mm = Minute (00-59)
+   f. ss = Second (00-59)
+   g. SSS = Milliseconds (000-999)
+
+8. Timeline values
+   a. current - Right now (use for: creation timestamps)
+   b. future - Later (use for: deadlines, expiry dates)
+   c. past - Earlier (use for: historical data)
+
+9. Example
+   {
+     "type": "remote",
+     "generatorMethod": "applicationDriver.rpc.desk.DynamicDataProvider.getDateTime",
+     "inputs": {
+       "timeLine": "current",
+       "format": "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+     }
+   }
+
+TYPE 3: REFERENCE - USE REQUEST INPUT DATA
+1. Purpose: Reference data from incoming request
+2. When to use
+   a. Pass-through values from request
+   b. Using request body data
+   c. Using query or path parameters
+   d. Using request headers
+
+3. Required properties
+   a. type - String "reference"
+   b. ref - Path to request data
+
+4. Optional properties
+   a. name - Generator identifier
+
+5. Rules
+   a. Verify field exists in request
+   b. Use exact field names (case-sensitive)
+   c. Use correct location (body, query, path, header)
+   d. Document expected request structure
+   e. Test with real request samples
+
+6. Reference locations
+   a. $.input.body - Request body JSON
+   b. $.input.query - Query parameters
+   c. $.input.path - URL path parameters
+   d. $.input.header - HTTP headers
+
+7. Example
+   {
+     "type": "reference",
+     "ref": "$.input.body:$.ticketId"
+   }
+
+TYPE 4: STATIC - FIXED HARDCODED VALUES
+1. Purpose: Use constant fixed values
+2. When to use
+   a. Value never changes
+   b. Same value always needed
+   c. Testing with known values
+   d. Configuration constants
+
+3. Required properties
+   a. type - String "static"
+   b. value - The constant value
+
+4. Optional properties
+   a. name - Generator identifier
+
+5. Rules
+   a. Use only for truly fixed values
+   b. Match value type to OpenAPI spec
+   c. For changing values, use DYNAMIC
+   d. For timestamps, use REMOTE
+   e. Create variants for different scenarios
+
+6. Supported value types
+   a. String - Quoted text ("OPEN", "HIGH", "user@example.com")
+   b. Number - No quotes (42, 99, -5, 0)
+   c. Decimal - No quotes (99.99, 3.14, 0.5)
+   d. Boolean - true or false (no quotes)
+   e. Array - [ ] brackets (["a", "b"], [1, 2, 3])
+   f. Object - { } braces ({"field": "value"})
+   g. Null - null keyword
+
+7. Example
+   {
+     "type": "static",
+     "value": "OPEN"
+   }
+
+TYPE 5: CONDITIONAL - LOGIC-BASED VALUES
+1. Purpose: Return value based on conditions
+2. When to use
+   a. Value depends on another field
+   b. Different values for different scenarios
+   c. Conditional logic needed
+   d. Multiple possible values
+
+3. Required properties
+   a. type - String "conditional"
+   b. condition - Condition to evaluate
+   c. then - Generator if true
+
+4. Optional properties
+   a. else - Generator if false (defaults to null)
+   b. name - Generator identifier
+
+5. Condition format
+   a. Use field name on left side
+   b. Use == operator (equality only)
+   c. Quote string values: 'VALUE'
+   d. No quotes for booleans or numbers
+   e. Examples: priority == 'HIGH', isClosed == true, severity == 'CRITICAL'
+
+6. Rules
+   a. Keep conditions simple and readable
+   b. Provide both then and else when possible
+   c. Limit nesting to 2-3 levels maximum
+   d. Test all branches in condition
+   e. Field names reference input or other generators
+
+7. Branch types (then/else can use any)
+   a. Static (fixed value)
+   b. Dynamic (fetch from API)
+   c. Remote (system function)
+   d. Reference (request data)
+   e. Conditional (nested conditions)
+
+8. Example
+   {
+     "type": "conditional",
+     "condition": "priority == 'HIGH'",
+     "then": {"type": "static", "value": "ESCALATED"},
+     "else": {"type": "static", "value": "NORMAL"}
+   }
+
+SECTION 3: VALIDATION & TESTING
+
+VALIDATION CHECKLIST
+
+Structure Validation
+1. JSON is valid (no trailing commas, all brackets closed)
+2. Only root key is "generators"
+3. All generators wrapped in arrays [ ]
+4. No extra braces or brackets
+
+Generator Validation
+1. Every generator has "type" property
+2. All required properties present
+3. Property names spelled correctly (case-sensitive)
+4. JSON values have correct syntax
+5. No missing commas between properties
+
+Naming Validation
+1. All names lowercase with underscores (snake_case)
+2. IDs end with _id suffix
+3. Names are descriptive
+4. No camelCase or UPPERCASE
+5. No spaces in names
+
+Reference Validation
+1. Same-file refs use: #/generators/name
+2. Cross-file refs use: ../Entity/file.json#/generators/name
+3. All referenced generators exist
+4. All referenced files exist
+5. Path names match exactly
+
+Testing Validation
+1. Manually verify one example works
+2. Data types match OpenAPI expectations
+3. Values match actual API response format
+4. Test with multiple values
+5. Test edge cases
+
+KEY PRINCIPLES
+
+Consistency
+1. Use same rules everywhere
+2. Follow same patterns across files
+3. Apply same validation rules
+4. Organize files similarly
+5. Update all related generators together
+
+Reusability
+1. Define generators once, reference many times
+2. Reduces duplication and errors
+3. Easier to update values
+4. Simplifies maintenance
+5. Consistent data across tests
+
+Clarity
+1. Use descriptive names
+2. Names show entity being referenced
+3. Names show status or filter
+4. Self-documenting code
+5. Add comments for complex logic
+
+Validation
+1. Always verify before committing
+2. JSON syntax is valid
+3. All references exist
+4. Field names match OpenAPI
+5. Generator properties are correct
+
+QUICK REFERENCE SUMMARY
+
+Generator Types
+1. DYNAMIC - type, generatorOperationId, dataPath
+2. REMOTE - type, generatorMethod, inputs
+3. REFERENCE - type, ref
+4. STATIC - type, value
+5. CONDITIONAL - type, condition, then (else optional)
+
+Core Rules (Mandatory)
+1. Include "type" in every generator
+2. Wrap all generators in arrays []
+3. Use snake_case naming with "_id" suffix
+4. Use [*] suffix for array parameters
+5. Use ../ for cross-file references
+6. Match value types to OpenAPI spec
+
+Important File Restrictions
+1. NEVER edit OpenAPI Specification files
+2. NEVER edit generator files (test_data_generation_configurations.json) manually
+3. These are auto-generated or system-controlled
+4. Use proper configuration management for changes
+5. Follow change control procedures
+
+Workflow Steps
+1. Analyze OpenAPI specification
+2. Identify required vs optional parameters
+3. Choose appropriate generator types
+4. Create generators with descriptive names
+5. Validate JSON syntax
+6. Test with sample data
+7. Verify all references exist
+8. Get peer review
+9. Commit to repository
+
+Last Updated: 12 February 2026

@@ -1,0 +1,100 @@
+1)Create README.md file ==>
+I give a Open Api specification files and another format files.
+Every time I only give a OAS file and give one prompt like if I given Todo.json oas file and I said "delete todo" you should generate .generators for this prompt.I already have many generator for train you.I have OAS files and that generator files. Read the api-data-generators folder's generator files and next time I only give the OAS file and the generator prompt (which generators ) you also read the openapi-specification folder this folder have all oas files for api-data-generators folder's generator files.I already told I only give oas file and prompt.So, you create the README.md file for making generator for given oas and prompt.SO, next time you could be understand how generate generators.The readme file create inside the Generator_Patterns.
+
+Expectations in Generators:
+1)If I said "Delete Ticket" created generator should be have the dependency also, like department and contact then department id with contact id use and make Ticket.
+
+And AI should known which API which data type return.So,the generators generate same type of data.
+3)Generators return the same type of data value in mentioned OAS file.
+================================================================
+2) added for -1
+rewrite the Readme file only generate generators ,don't generate apis .And don't mention data types .If creating generators don't use exiting api-data-generator .create own generators.
+================================================================
+only generate like api-data-generators pattern like generators.SO, rewrite readme
+================================================================
+you are created wrong pattern so, rewrite the README file using Dynamic , static.reference generators pattern file inside a Generator_Patterns folder\.So,you easily understand how generate generators
+.===============================================================
+
+Feb 11 2026
+
+1)Make Instructions file
+I only give the OAS file you generate the generators.Read the api-data-generators folder and analyze make basic generator README.md file for next make generator.and also using the instruction.txt
+================================================================
+2)add on -1
+Read again the generator files and rewrite theREADME file first of all make general instructions for all generators ,common patterns and common rules.and next make the each generators specific instructions and patterns so Readme file are may be less lines and human readable and and also use easily understand how make generators .
+=================================================================
+3)add on-2
+Analyze the all generator files inside the api-data-generators folder.These generators created for openapi-specification folder files.SOn generator generate same type of value mentioned in oas file.example)if I give department oas file and prompt "edit department " , so, create department generator inputs type are same as the mentioned in oas file.SO, analyze the openapi-specification folder belongs the api-data-generators folder and rewrite the readme file .Readme file should be write the professional way and easy to understand.So, next time humans easily rad and learn how create generators and you easily generate generators using this Readme file and given oas file and prompt .
+==================================================================
+
+4)add on-3
+Rewrite the READme file and enhance the file common mistakes section and the jsonpath and location path may be define common to all and make professional don't use icons write professional way using attachments. 
+==================================================================
+
+5)add on-4
+you define th readme file very well.I said the output for this file but you generate another md file I expected the generator file in json.Analyze the api-data-generators's generators files and enhance and rewrite the Readme.MD file
+==================================================================
+6)add on-5
+use only the support folder inside the api-data-generator folder don't add meta data object rewrite analyze the support folder and rewrite the readme file
+==================================================================
+
+7)add on-6
+delete md files except the README.md file and try to rewrite the all rules and instructions inside the README.md file
+=================================================================
+
+8)add on-7
+No need to define path configuration for Exiting generators in README.md file I latterly define another .properties file so, readme file only have reference for the path config file.And try to enhance the README.md file.
+=================================================================
+9)enhance the README.md file
+enhance the README.md file so many line have this file.I try to read but , I can't understand .You easily understand because you are AI.But, humans try to read this file and make generators manually very very hard.So enhance the README.md file
+=================================================================
+
+10)add on-9
+Try to remove unwanted data for "How generate generators".and remove repeated data.Try to decrease the README.md file.
+
+Rules in README.md file:
+
+1)Common Instruction for all generators and basic rules and expectations.
+2)Each generator instructions and rules and examples. 
+
+use this format and try to short the README.md file.
+
+don't have unnecessary data in README.md file.
+================================================================
+
+11)Enhance
+You are created a nice instruction and rules file for generate generators I believe.Now small change, you only generate the needed generators only no need to write apis object.Analyze the source folder api-data-generators/support generator files and openapi-spe../oas files and rewrite the README.md file
+================================================================
+
+12)add on-11
+Rewrite the README.md file readme file have only common instructions only and that readme file have reference for specific instruction for each generator.
+
+like 
+
+readme ->common instructions and dynamic,static,remote,reference,conditional generator reference
+
+this generators instruction split into another files.
+
+like readme,dynamic,static,reference,remote,conditional
+===============================================================
+
+13)enhance the .md files
+Avoid unwanted data , unnecessary data and repeated data in all .md files .And avoid icons in .md files.I think repeated examples have in .md files.So,
+
+falsy example)false
+true example)true
+
+i think these type of examples may be unnecessary.Try to avoid unwanted things.Try to enhance the all .md files .and increase readability.
+================================================================
+
+14)Enhance
+Rewrite the Instruction.txt file include all basic instructions and each generator instructions only human readable. use all .md files inside a Generator_Patterns folder.
+================================================================
+
+15)Instruction.txt enhancement
+Avoid unwanted data , unnecessary data and repeated data in Instruction.txt file.I think repeated examples have in files.So,
+falsy example)false
+true example)true
+i think these type of examples may be unnecessary.Try to avoid unwanted things.Try to enhance the instruction files and increase readability.
+================================================================
