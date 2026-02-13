@@ -2,7 +2,7 @@ DATA GENERATION FRAMEWORK - INSTRUCTIONS & RULES
 
 OVERVIEW
 • Generates test data from OpenAPI specifications
-• Define generator rules once, apply consistently across all parameters
+<!-- • Define generator rules once, apply consistently across all parameters -->
 • Ensures reliable, reusable, and maintainable test data creation
 • All generators must follow mandatory rules for compliance
 
@@ -36,7 +36,7 @@ Guidelines:
   • Add status/filter if applicable (active_agent_id, open_ticket_id)
   • Add operation if applicable (created_ticket_id, updated_contact_id)
   • Avoid vague names (id1, data, temp, var)
-  • Ensure consistency across all entity files
+  <!-- • Ensure consistency across all entity files -->
 
 GENERATOR REFERENCES
 
