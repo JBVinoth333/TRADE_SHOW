@@ -1,25 +1,13 @@
 # DYNAMIC Generator - Fetch from API Responses
 
 ## What It Does
-
-Fetches IDs and references from actual API calls. Retrieves real system data that must exist in your test environment.
-
+A DYNAMIC Generator fetches data from real API responses.
+ <!-- It allows you to extract values like IDs, names, or other fields directly from the system under test, ensuring that your tests use valid and up-to-date data. -->
 ---
 
 ## When to Use DYNAMIC
-
-Use DYNAMIC when you need:
-- Real entity IDs from the system
-- Dependent resource references
-- Data that varies per test environment
-- Actual data matching system state
-
-**Common Scenarios:**
-- Fetch agent IDs from Agent API
-- Get ticket IDs from active tickets
-- Retrieve department IDs for assignments
-- Extract contact IDs for relationships
-
+- When you need real system data that changes frequently (e.g., active agent IDs, current ticket IDs).
+- When there is an API available to fetch the required data.
 ---
 
 ## Required Properties
@@ -43,10 +31,10 @@ Use DYNAMIC when you need:
 
 **Pattern:** `$.response.body:$.path.to.data`
 
-**Common Selectors:**
+<!-- **Common Selectors:**
 - `[*]` - Get all array elements
 - `[0]` - Get first element only
-- `.fieldName` - Get specific field
+- `.fieldName` - Get specific field -->
 
 **Examples:**
 - `$.response.body:$.data[0].id` - First item ID
@@ -66,17 +54,6 @@ Fetch the first matching record:
   "dataPath": "$.response.body:$.data[0].id"
 }
 ```
-
-### Multiple Results
-Get all matching records:
-```json
-{
-  "type": "dynamic",
-  "generatorOperationId": "support.Agent.getAgents",
-  "dataPath": "$.response.body:$.data[*].id"
-}
-```
-
 ### With Filter Parameters
 Find specific records:
 ```json
@@ -87,7 +64,6 @@ Find specific records:
   "params": {"status": "ACTIVE"}
 }
 ```
-
 ### Nested Field
 Extract from object hierarchy:
 ```json
@@ -97,7 +73,6 @@ Extract from object hierarchy:
   "dataPath": "$.response.body:$.manager.id"
 }
 ```
-
 ---
 
 ## Common Patterns
@@ -158,26 +133,13 @@ Reference different APIs:
   }]
 }
 ```
-
 ---
-
-## Cross-File References
-
-### Reference from Different Entity
-
-Reference a generator defined in another entity's file:
-```json
-"assigned_agent_id": [
-  "#/generators/../Agent/test_data_generation_configurations.json#/generators/agent_id"
-]
-```
 
 ### Multiple Values (Array)
 Use `[*]` suffix for array parameters:
 ```json
 "agent_ids[*]": "#/generators/agent_id"
 ```
-
 ---
 
 ## Best Practices
@@ -185,44 +147,23 @@ Use `[*]` suffix for array parameters:
 **Do:**
 - Use params to filter for specific scenarios
 - Give descriptive names showing the filter/status
-- Verify operationId exists in OpenAPI spec
-- Use `[*]` for multiple results, `[0]` for single
-- Test the API manually first
-
+- Verify operationId exists in OpenAPI specification
+- Test the API manually first to confirm dataPath is correct
+- 
 **Avoid:**
 - Assuming first result is always valid
 - Generic names like "id"
 - Forgetting `[*]` on array parameters
 - Hardcoding fallback without DYNAMIC
-
+- 
 ---
 
-## Troubleshooting
-
-### Getting Wrong Data or Empty Results
-**Check:**
+## Check
 - operationId is spelled correctly
 - dataPath matches actual response structure
-- Test the API operation manually
 - params filter isn't too strict
 
-### Empty or No Results
-**Try:**
-- Relax filter parameters
-- Check if API has matching data
-- Use different dataPath expression
-- Add STATIC fallback generator
-
-### Wrong Number of Results
-**Verify:**
-- Using `[*]` for all vs `[0]` for first
-- API returns expected array structure
-- Check pagination limits
-
----
-
 ## Reference
-
 - **Fetch Method:** API operations
 - **Data Type:** Real system data
 - **Scope:** Cross-entity references possible

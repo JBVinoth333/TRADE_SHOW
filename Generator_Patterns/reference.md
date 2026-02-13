@@ -9,7 +9,7 @@ Passes data directly from incoming request to response without modification. Ext
 ## When to Use REFERENCE
 
 Use REFERENCE when:
-- Using data from request body
+A Reference Generator extracts data from previous API responses.- Using data from request body
 - Getting values from query parameters
 - Using path parameters
 - Using header values
