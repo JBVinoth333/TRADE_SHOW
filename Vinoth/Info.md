@@ -1,5 +1,10 @@
+Introduction:
+=============
+The Data Generation Framework is designed to generate test data based on the OpenAPI Specification. It extracts input parameter details from OpenAPI definitions and generates test data accordingly.
 
+To control the data generation process, developers must define test data generation configuration files. These configuration files follow a structured format, as detailed in this specification.
 
+============================================================================
 Dynamic Generator:
 ==================
 
