@@ -77,7 +77,7 @@ Common patterns:
 - OpenAPI Specification (OAS) files
 - Generator files (test_data_generation_configurations.json)
 
-These files are auto-generated or controlled by system processes. Any edits must be done through proper configuration management.
+These files are controlled by system processes. Any edits must be done through proper configuration management.
 
 ## Common Mistakes
 
@@ -132,7 +132,7 @@ Reference generators from other entities:
 
 ### 3.1 Dynamic Generator
 
-Fetch IDs from real API responses. Required: type, generatorOperationId, dataPath. Optional: params.
+Fetch IDs from real API responses. Required: type, generatorOperationId, dataPath. Optional: params,name.
 
 See [dynamic.md](./dynamic.md) for details.
 
@@ -160,7 +160,7 @@ Choose value based on conditions. Required: type, condition, then. Optional: els
 
 See [conditional.md](./conditional.md) for details.
 
-## 4. Real-World Patterns
+## 4. Real-World PatternsInputs
 
 ### 4.1 Entity Relationships
 
@@ -215,17 +215,7 @@ When API accepts multiple values:
 
 The `[*]` suffix means "use multiple values from this generator".
 
-## 5. Detailed Guides for Each Generator Type
-
-For complete documentation, examples, and patterns:
-
-- **[Dynamic Generator](./dynamic.md)** - Fetch IDs from APIs
-- **[Remote Generator](./remote.md)** - Call system functions
-- **[Reference Generator](./reference.md)** - Use request data
-- **[Static Generator](./static.md)** - Fixed constant values
-- **[Conditional Generator](./conditional.md)** - Conditional logic
-
-## 6. How to Create a Generator (Step-by-Step)
+## 5. How to Create a Generator (Step-by-Step)
 
 ### Step 1: Understand Your Parameters
 Open your OpenAPI spec and list all parameters with their types and descriptions.
@@ -240,11 +230,11 @@ Examples:
 
 ### Step 3: Read the Appropriate Guide
 
-Click the guide link for your generator type (Section 5). Find examples that match your needs.
+Click the guide link for your generator type (Section 3). Find examples that match your needs.
 
 ### Step 4: Create Your Generator File
 
-Create file at: `api-data-generators/support/MyEntity/test_data_generation_configurations.json`
+Create file at: `Generators/Real_Generators/MyEntity/test_data_generation_configurations.json`
 
 ```json
 {
@@ -259,53 +249,11 @@ Create file at: `api-data-generators/support/MyEntity/test_data_generation_confi
   }
 }
 ```
-
-### Step 5: Validate Before Committing
-
-Check your work using the validation checklist below.
-
-## 7. Pre-Commit Validation Checklist
-
-Before creating a pull request, verify:
-
-**File Structure:**
-- File location: `api-data-generators/support/EntityName/test_data_generation_configurations.json`
-- JSON is valid (no trailing commas, all brackets closed)
-- Only one root key: `"generators"`
-
-**Generators:**
-- All generators wrapped in arrays: `[ { ... } ]`
-- Every generator has required `type` property
-- All required properties present for each type
-
-**Parameters:**
-- Parameter names match OAS exactly (case-sensitive)
-- Array parameters have `[*]` suffix
-- All referenced status codes exist in OAS
-
-**References:**
-- Same-file: `#/generators/name`
-- Cross-file: `../Entity/test_data_generation_configurations.json#/generators/name`
-- All referenced generators exist
-- All referenced files exist
-
-**Naming:**
-- All lowercase with underscores (snake_case)
-- IDs end with `_id`
-- Names are descriptive
-
-**Testing:**
-- Manually verify one example works
-- Check data types match expectations
-- Verify against actual API response format
-
-## 8. Key Principles
+## 7. Key Principles
 
 - Consistency: Same rules everywhere
 - Reusability: Reference generators across APIs
 - Clarity: Good names help understanding
-- Validation: Check before commit
-
 ---
 
-*Last Updated: 11 February 2026*
+*Last Updated: 14 February 2026*
