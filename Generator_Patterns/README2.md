@@ -127,54 +127,6 @@ Minimal file shape:
 4. Cross-file references use: `"../Entity/test_data_generation_configurations.json#/generators/name"`.
 5. For multi-value parameters append `[*]` to the parameter name (e.g. `agentIds[*]`).
 
-## Quick examples
-
-Dynamic example
-```json
-"generators": {
-  "snippet_id": [{
-    "type": "dynamic",
-    "generatorOperationId": "Snippets.create",
-    "dataPath": "$.response.body:$.snippetId",
-    "params": { "name": "static_value" }
-  }]
-}
-```
-
-Remote example
-```json
-"generators": {
-  "snippet_id": [{
-    "type": "remote",
-    "generatorMethod": "org.example.TestData.generateSnippetId",
-    "params": { "name": "static_value" }
-  }]
-}
-```
-
-Conditional example
-```json
-"generators": {
-  "snippet_id": [{
-    "type": "conditional",
-    "conditions": [
-      { "when": { "key": "$.input.query:modules", "equals": "tickets" }, "then": { "use": "$generators:#/generators/ticket_id" } }
-    ],
-    "else": "$generators:#/generators/activity_id"
-  }]
-}
-```
-
-Reference (JSON path)
-```json
-"ref": "$.response.body:$.data[*].id"
-```
-
-Generator group ref
-```json
-"ref": "$generators:#/generators/agent_id"
-```
-
 ## Best practices
 
 - Validate `generatorOperationId` against the OpenAPI operation IDs.
