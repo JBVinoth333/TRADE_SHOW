@@ -323,3 +323,4 @@ Collected Information:
 4) REMOTE types correctly used for custom Java function calls
 5) Proper use of `"name"` property for multi-level generator chains
 6) Proper use of JSONPath expressions including filters and wildcards
+7) These JSON files define how to generate test data for API testing
