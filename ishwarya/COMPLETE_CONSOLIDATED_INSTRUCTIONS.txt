@@ -1,0 +1,1297 @@
+=================================================================================
+COMPLETE GENERATORS PATTERN GUIDE - CONSOLIDATED INSTRUCTIONS
+=================================================================================
+
+Combined from:
+- Patterns/instructions.txt
+- Generators-Patterns/ (10 files)
+- New_Patterns/ (13 files)
+
+Last Updated: February 12, 2026
+Status: ✅ COMPLETE WITH ALL RULES AND EXAMPLES
+
+=================================================================================
+TABLE OF CONTENTS
+=================================================================================
+
+1. QUICK START (5 minutes)
+2. OVERVIEW & PURPOSE
+3. GENERATOR FILE STRUCTURE
+4. FIVE GENERATOR TYPES (Complete Reference)
+5. REFERENCE SYNTAX GUIDE
+6. PATTERNS & BEST PRACTICES
+7. WORKING WITH MULTIPLE STATIC GENERATORS (NEW RULE)
+8. COMMON MISTAKES & FIXES
+9. TEMPLATES (7 Ready-to-Use)
+10. DECISION TREES
+11. FOLDER STRUCTURE & ORGANIZATION
+12. DEPENDENCIES & GENERATION ORDER
+13. STEP-BY-STEP EXAMPLES
+14. USEFUL COMMANDS
+
+=================================================================================
+1. QUICK START (5 MINUTES)
+=================================================================================
+
+WHAT IS THIS?
+- Convert OpenAPI Specification (OAS) files into test_data_generation_configurations.json
+- These JSON files define how to generate test data for API testing
+
+THREE MAIN STEPS:
+1. Have an OAS file (location: oas/v1.0/portal, oas/v1.0/support, or Testing_OAS)
+2. Extract operations and schemas
+3. Output: test_data_generation_configurations.json created in each OAS directory
+
+TWO MAIN SECTIONS IN GENERATED FILE:
+- "apis" section: Maps API operations to test data fields
+- "generators" section: Defines how to generate each field
+
+FIVE GENERATOR TYPES:
+1. STATIC - Hard-coded fixed values (status, priority, constants)
+2. DYNAMIC - Call API and extract data (IDs, real database values)
+3. REMOTE - Call custom Java function (org-specific enums, computed values)
+4. REFERENCE - Reuse generators from other modules (DRY principle)
+5. CONDITIONAL - Generate based on conditions (if/then logic)
+
+=================================================================================
+2. OVERVIEW & PURPOSE
+=================================================================================
+
+PURPOSE: Generate complete, realistic test data for API testing
+
+PROBLEM WE SOLVE:
+- Manual test data creation is time-consuming
+- Hard to maintain test data across multiple APIs
+- Need to handle dependencies (e.g., Ticket depends on Agent and Department)
+- Easy to create invalid scenarios (404, 422, etc.)
+
+HOW IT WORKS:
+1. Analyze OAS file structure (paths, operations, schemas)
+2. Identify field types (string, integer, enum, etc.)
+3. Infer appropriate generator type for each field
+4. Create configuration that maps APIs to generators
+5. Use configuration to generate realistic test data at runtime
+
+BENEFITS:
+✓ Reduce manual test data creation
+✓ Maintain consistency across test suites
+✓ Handle complex dependencies automatically
+✓ Test error scenarios easily (404, 422, validation)
+✓ Generate large volumes of test data
+✓ Keep test data in sync with schema changes
+
+=================================================================================
+3. GENERATOR FILE STRUCTURE
+=================================================================================
+
+Every test_data_generation_configurations.json file has this structure:
+
+{
+  "apis": {
+    "operationId1": {
+      "statusCode1": {
+        "field1": "generator_reference_or_value",
+        "field2": "generator_reference_or_value"
+      }
+    }
+  },
+  "generators": {
+    "generator_name": [
+      {
+        "type": "static|dynamic|remote|reference|conditional",
+        ...properties specific to type...
+      }
+    ]
+  }
+}
+
+SECTION 1: "apis"
+- Maps each API operation (operationId) to its response structure
+- For each operation, define structure for each HTTP status code (200, 201, 404, 422, etc.)
+- For each status code, specify which generator to use for each response field
+
+Example:
+{
+  "apis": {
+    "createTicket": {
+      "201": {
+        "id": "#/generators/ticket_id",
+        "status": "#/generators/ticket_status",
+        "assignedAgent": "../Agent/test_data_generation_configurations.json#/generators/agent_id"
+      },
+      "422": {
+        "error": "Validation error"
+      }
+    }
+  }
+}
+
+SECTION 2: "generators"
+- Defines each generator (how to generate specific values)
+- Can be STATIC (hard-coded), DYNAMIC (API call), REMOTE (custom function), etc.
+- Generators are referenced in "apis" section using #/generators/name syntax
+
+Example:
+{
+  "generators": {
+    "ticket_status": [{
+      "type": "static",
+      "value": ["Open", "In Progress", "Resolved", "Closed"]
+    }],
+    "ticket_id": [{
+      "type": "dynamic",
+      "generatorOperationId": "Ticket.createTicket",
+      "dataPath": "$.response.body:$.id",
+      "name": "created_ticket",
+      "params": {
+        "status": "$generators:#/generators/ticket_status"
+      }
+    }]
+  }
+}
+
+=================================================================================
+4. FIVE GENERATOR TYPES (COMPLETE REFERENCE)
+=================================================================================
+
+TYPE 1: STATIC GENERATOR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Purpose: Hard-coded values that don't change
+When to use: Status, priority, configuration, constants, enumerations
+
+✅ RULE: Multiple STATIC generators ARE valid and recommended
+
+JSON Example:
+{
+  "generators": {
+    "ticket_status": [{
+      "type": "static",
+      "value": ["Open", "In Progress", "Resolved", "Closed"]
+    }],
+    "priority": [{
+      "type": "static",
+      "value": ["High", "Medium", "Low"]
+    }]
+  }
+}
+
+Use when:
+- Different fields have different fixed values
+- Multiple STATIC generators in same file is OK (best practice)
+- Can be consumed by DYNAMIC generators as parameters
+
+Characteristics:
+✓ Simple and maintainable
+✓ No API calls required (fast)
+✓ Deterministic (same value every time)
+✓ Perfect for config, enums, constants
+
+---
+
+TYPE 2: DYNAMIC GENERATOR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Purpose: Call an API and extract data from response
+When to use: Need to create data in one entity before using it in another
+
+JSON Example (Single Level):
+{
+  "generators": {
+    "customer_id": [{
+      "type": "dynamic",
+      "generatorOperationId": "Customer.create",
+      "dataPath": "$.response.body:$.id",
+      "params": {
+        "name": "$generators:#/generators/customer_name"
+      }
+    }]
+  }
+}
+
+JSON Example (Chained - Multiple Levels):
+{
+  "generators": {
+    "department_id": [{
+      "type": "dynamic",
+      "generatorOperationId": "Department.list",
+      "dataPath": "$.response.body:$.data[0].id",
+      "name": "dept"
+    }],
+    "agent_id": [{
+      "type": "dynamic",
+      "generatorOperationId": "Agent.listByDept",
+      "dataPath": "$.response.body:$.data[0].id",
+      "params": {
+        "departmentId": "$dept.value"
+      }
+    }]
+  }
+}
+
+Key Properties:
+- type: "dynamic" (required)
+- generatorOperationId: API to call (required)
+- dataPath: JSON path to extract from response (required)
+- params: Input parameters (optional)
+- name: For chaining (use if output needed by next generator)
+
+---
+
+TYPE 3: DYNAMIC GENERATOR (Chained - Multi-Level)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+See TYPE 2 JSON Example (Chained) above for chaining example.
+
+Key for chaining:
+- Add "name" property to first DYNAMIC to make output referenceable
+- Reference previous output using $name.value syntax
+- No circular dependencies allowed
+
+---
+
+TYPE 4: REFERENCE GENERATOR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Purpose: Reuse generators from other modules (DRY principle)
+When to use: Multiple entities need the same data
+
+JSON Example:
+{
+  "generators": {
+    "local_ref": [{
+      "type": "reference",
+      "value": "#/generators/priority_enum"
+    }],
+    "cross_module_ref": [{
+      "type": "reference",
+      "value": "../Department/test_data_generation_configurations.json#/generators/department_id"
+    }]
+  }
+}
+
+Reference Paths:
+- #/generators/name - Local reference (same file)
+- ../Module/file.json#/generators/name - Cross-module reference
+- $.input.body:$.field - Extract from request body
+- $.input.query:$.field - Extract from query parameters
+- $.input.path:$.field - Extract from path parameters
+
+---
+
+TYPE 5: REMOTE GENERATOR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Purpose: Call custom Java functions or external services
+When to use: Organization-specific enums, computed values, custom logic
+
+JSON Example:
+{
+  "generators": {
+    "ticket_status": [{
+      "type": "remote",
+      "generatorMethod": "applicationDriver.rpc.desk.DynamicDataProvider.getDynamicEnumValues",
+      "inputs": {
+        "fieldName": "status",
+        "moduleName": "Ticket",
+        "orgId": "$.input.query:$.orgId"
+      }
+    }]
+  }
+}
+
+Use when:
+- Need custom Java function (not REST API)
+- Organization-specific enums
+- Computed values (dates, hashes, IDs)
+- Complex custom logic
+
+Key Properties:
+- type: "remote" (required)
+- generatorMethod: Full path to Java function (required)
+- inputs: Parameters for the function (optional)
+
+---
+
+TYPE 6: CONDITIONAL GENERATOR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Purpose: Generate values based on conditional logic
+When to use: Different values based on conditions or request parameters
+
+JSON Example:
+{
+  "generators": {
+    "priority": [{
+      "type": "conditional",
+      "condition": "$.input.query:$.highPriority == true",
+      "ifTrue": {
+        "type": "static",
+        "value": ["High", "Critical"]
+      },
+      "ifFalse": {
+        "type": "static",
+        "value": ["Medium", "Low"]
+      }
+    }]
+  }
+}
+
+Key Properties:
+- type: "conditional" (required)
+- condition: What to evaluate (required)
+- ifTrue: Generator if true (optional)
+- ifFalse: Generator if false (optional)
+
+=================================================================================
+5. REFERENCE SYNTAX GUIDE
+=================================================================================
+
+WHEN TO USE EACH SYNTAX:
+
+Syntax 1: Reference another generator (same file)
+Format: $generators:#/generators/generator_name
+Usage: In "params" section of DYNAMIC generators
+Example: "status": "$generators:#/generators/ticket_status"
+When: You want to reference a STATIC or other generator in same file
+
+Syntax 2: Use generator output value (for chaining)
+Format: $generator_name.value
+Usage: In "params" section of chained DYNAMIC generators
+Example: "departmentId": "$dept.value"
+When: Previous generator has "name": "dept" property
+
+Syntax 3: Get from current request (path parameter)
+Format: $.input.path:$.paramName
+Usage: In "params" section when you need request path param
+Example: "ticketId": "$.input.path:$.ticketId"
+When: API path has parameters like /tickets/{ticketId}
+
+Syntax 4: Get from current request (query parameter)
+Format: $.input.query:$.paramName
+Usage: In "params" section when you need query string param
+Example: "sortBy": "$.input.query:$.sortBy"
+When: API query has parameters like ?sortBy=createdTime
+
+Syntax 5: Get from current request (request body)
+Format: $.input.body:$.fieldName
+Usage: In "params" section when you need request body field
+Example: "categoryId": "$.input.body:$.categoryId"
+When: API requires field from incoming request
+
+Syntax 6: Extract from API response
+Format: $.response.body:$.path.to.data[*].field
+Usage: In "dataPath" section of DYNAMIC generators
+Example: "$.response.body:$.data[*].id"
+When: Extracting values from API response
+
+Syntax 7: Local reference (same file)
+Format: #/generators/generator_name
+Usage: In "apis" section or other "generators"
+Example: "#/generators/ticket_status"
+When: Referencing a generator in same file
+
+Syntax 8: Cross-module reference
+Format: ../ModuleName/test_data_generation_configurations.json#/generators/name
+Usage: In "apis" section when using generator from another module
+Example: "../Department/test_data_generation_configurations.json#/generators/department_id"
+When: Needing a generator from a different module
+
+QUICK LOOKUP TABLE:
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ Need This                    │ Use This Syntax                      │
+├──────────────────────────────┼──────────────────────────────────────┤
+│ Reference local generator    │ $generators:#/generators/name        │
+│ Use chained generator output │ $generator_name.value                │
+│ Path parameter               │ $.input.path:$.param                 │
+│ Query parameter              │ $.input.query:$.param                │
+│ Request body field           │ $.input.body:$.field                 │
+│ Response field               │ $.response.body:$.path[*].field      │
+│ Local file reference         │ #/generators/name                    │
+│ Cross-module reference       │ ../Module/file.json#/generators/name │
+└─────────────────────────────────────────────────────────────────────┘
+
+=================================================================================
+6. PATTERNS & BEST PRACTICES
+=================================================================================
+
+PATTERN 1: Foundation Layer (No Dependencies)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Use: Configuration, enums, constants that nothing depends on
+
+{
+  "generators": {
+    "status": [{
+      "type": "static",
+      "value": ["Open", "Closed", "Pending"]
+    }],
+    "priority": [{
+      "type": "static",
+      "value": ["High", "Medium", "Low"]
+    }]
+  }
+}
+
+---
+
+PATTERN 2: Single Dependency
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Use: Entity depends on one parent entity (e.g., Article depends on Category)
+
+{
+  "generators": {
+    "article_id": [{
+      "type": "dynamic",
+      "generatorOperationId": "Article.create",
+      "dataPath": "$.response.body:$.id",
+      "params": {
+        "categoryId": "$generators:#/generators/category_id"
+      }
+    }]
+  }
+}
+
+---
+
+PATTERN 3: Chain Dependencies
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Use: A → B → C chains (e.g., Department → Agent → Ticket)
+
+{
+  "generators": {
+    "department_id": [{
+      "type": "dynamic",
+      "generatorOperationId": "Department.list",
+      "dataPath": "$.response.body:$.data[0].id",
+      "name": "dept"
+    }],
+    "agent_id": [{
+      "type": "dynamic",
+      "generatorOperationId": "Agent.listByDept",
+      "dataPath": "$.response.body:$.data[0].id",
+      "name": "agent",
+      "params": {
+        "departmentId": "$dept.value"
+      }
+    }],
+    "ticket_id": [{
+      "type": "dynamic",
+      "generatorOperationId": "Ticket.create",
+      "dataPath": "$.response.body:$.id",
+      "params": {
+        "agentId": "$agent.value"
+      }
+    }]
+  }
+}
+
+---
+
+PATTERN 4: Multiple Dependencies
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Use: Entity depends on multiple parents (e.g., Ticket needs Department + Agent + Contact)
+
+{
+  "apis": {
+    "createTicket": {
+      "201": {
+        "ticketId": "#/generators/ticket_id",
+        "departmentId": "../Department/test_data_generation_configurations.json#/generators/department_id",
+        "agentId": "../Agent/test_data_generation_configurations.json#/generators/agent_id",
+        "contactId": "../Contact/test_data_generation_configurations.json#/generators/contact_id"
+      }
+    }
+  }
+}
+
+---
+
+PATTERN 5: Error Testing (Multiple Status Codes)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Use: Test success and error scenarios
+
+{
+  "apis": {
+    "getTicket": {
+      "200": {
+        "id": "#/generators/valid_ticket_id"
+      },
+      "404": {
+        "id": "#/generators/nonexistent_ticket_id"
+      }
+    }
+  },
+  "generators": {
+    "valid_ticket_id": [{
+      "type": "dynamic",
+      "generatorOperationId": "Ticket.create",
+      "dataPath": "$.response.body:$.id"
+    }],
+    "nonexistent_ticket_id": [{
+      "type": "static",
+      "value": ["TICKET_NOTFOUND"]
+    }]
+  }
+}
+
+=================================================================================
+7. WORKING WITH MULTIPLE STATIC GENERATORS (NEW RULE)
+=================================================================================
+
+RULE: ✅ Multiple STATIC generators CAN and SHOULD be used in the same file
+when different fields have different fixed value sets.
+
+WHEN TO USE MULTIPLE STATIC:
+- Different fields with different fixed values
+- Related data needing multiple enumerations
+- Foundation layers with multiple configuration values
+- Error testing with multiple invalid values
+
+PATTERN: Multiple STATIC + Single DYNAMIC
+
+{
+  "generators": {
+    // Foundation Layer (STATIC)
+    "customer_name": [{
+      "type": "static",
+      "value": ["John Doe", "Jane Smith", "Maria Garcia"]
+    }],
+    "customer_email": [{
+      "type": "static",
+      "value": ["john@example.com", "jane@example.com", "maria@example.com"]
+    }],
+    "customer_phone": [{
+      "type": "static",
+      "value": ["+91-9876543210", "+91-9876543211", "+91-9876543212"]
+    }],
+    
+    // Business Layer (DYNAMIC consuming STATIC)
+    "customer_id": [{
+      "type": "dynamic",
+      "generatorOperationId": "Customer.create",
+      "dataPath": "$.response.body:$.id",
+      "params": {
+        "name": "$generators:#/generators/customer_name",
+        "email": "$generators:#/generators/customer_email",
+        "phone": "$generators:#/generators/customer_phone"
+      }
+    }],
+    
+    // Error Testing (STATIC for invalid values)
+    "nonexistent_customer_id": [{
+      "type": "static",
+      "value": ["cust_invalid_123"]
+    }]
+  }
+}
+
+BENEFITS:
+✓ Separation of concerns (one generator per field)
+✓ Easy to modify individual fields
+✓ Clear and maintainable
+✓ Standard production practice
+✓ Multiple STATIC generators can be consumed by single DYNAMIC
+
+API MAPPING EXAMPLE:
+{
+  "apis": {
+    "createCustomer": {
+      "201": {
+        "customerId": "#/generators/customer_id"
+      },
+      "404": {
+        "customerId": "#/generators/nonexistent_customer_id"
+      }
+    }
+  }
+}
+
+=================================================================================
+8. COMMON MISTAKES & FIXES
+=================================================================================
+
+MISTAKE 1: Wrong DataPath Syntax
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+❌ Wrong:
+"dataPath": "$.data[*].id"
+
+✅ Correct:
+"dataPath": "$.response.body:$.data[*].id"
+
+❌ Wrong:
+"dataPath": "$.response:$.id"
+
+✅ Correct:
+"dataPath": "$.response.body:$.id"
+
+FIX: Always include $.response.body: prefix
+
+---
+
+MISTAKE 2: Missing Generator Name for Chained Calls
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+❌ Wrong: (First DYNAMIC without "name")
+{
+  "type": "dynamic",
+  "generatorOperationId": "Article.create",
+  "dataPath": "$.response.body:$.id"
+}
+Then in next step, try to use: "$article.value" - WON'T WORK!
+
+✅ Correct: (First DYNAMIC with "name")
+{
+  "type": "dynamic",
+  "generatorOperationId": "Article.create",
+  "dataPath": "$.response.body:$.id",
+  "name": "article"
+}
+Now you can use: "$article.value"
+
+FIX: Add "name" property to first DYNAMIC in chain
+
+---
+
+MISTAKE 3: Wrong Reference Format
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+❌ Wrong:
+"value": "Department/test_data_generation_configurations.json#/generators/dept_id"
+"value": "./Department/test_data_generation_configurations.json#/generators/dept_id"
+
+✅ Correct:
+"value": "../Department/test_data_generation_configurations.json#/generators/dept_id"
+
+FIX: Always use ../ for cross-module references
+
+---
+
+MISTAKE 4: Circular Dependencies
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+❌ Wrong: A → B → A (circular)
+Department → Agent → Department
+
+✅ Correct: One-way dependency
+Department → Agent
+
+FIX: Check dependency flow doesn't create circles
+Use: Dependency analysis tools or manual review
+
+---
+
+MISTAKE 5: Wrong Parameter Reference
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+❌ Wrong:
+"params": {
+  "id": "$generator_name"
+}
+
+✅ Correct:
+"params": {
+  "id": "$generators:#/generators/generator_name"
+}
+
+FIX: Use $generators:# prefix for generator references
+
+---
+
+MISTAKE 6: Missing Required Properties
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+❌ Wrong DYNAMIC (missing dataPath):
+{
+  "type": "dynamic",
+  "generatorOperationId": "Article.create",
+  "params": {...}
+}
+
+✅ Correct:
+{
+  "type": "dynamic",
+  "generatorOperationId": "Article.create",
+  "dataPath": "$.response.body:$.id",
+  "params": {...}
+}
+
+Required properties by type:
+- STATIC: type, value
+- DYNAMIC: type, generatorOperationId, dataPath
+- REMOTE: type, generatorMethod (or remoteFunction)
+- REFERENCE: type, value
+- CONDITIONAL: type, condition
+
+---
+
+MISTAKE 7: Inconsistent Naming Convention
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+❌ Mixing conventions:
+"customer_name" (snake_case)
+"customerEmail" (camelCase)
+"ticket_status" (snake_case)
+"Priority" (PascalCase)
+
+✅ Consistent:
+"customer_name" (snake_case)
+"customer_email" (snake_case)
+"ticket_status" (snake_case)
+"ticket_priority" (snake_case)
+
+FIX: Use snake_case consistently throughout
+
+=================================================================================
+9. TEMPLATES (5 Ready-to-Use)
+=================================================================================
+
+TEMPLATE 1: Simple STATIC Generator
+{
+  "generators": {
+    "status_enum": [{
+      "type": "static",
+      "value": ["Open", "Closed", "Pending"]
+    }]
+  }
+}
+
+---
+
+TEMPLATE 2: Multiple STATIC Generators
+{
+  "generators": {
+    "field_1": [{"type": "static", "value": ["a", "b", "c"]}],
+    "field_2": [{"type": "static", "value": ["x", "y", "z"]}]
+  }
+}
+
+---
+
+TEMPLATE 3: DYNAMIC Generator (Single Level)
+{
+  "generators": {
+    "param": [{"type": "static", "value": ["value"]}],
+    "new_id": [{
+      "type": "dynamic",
+      "generatorOperationId": "Module.Operation",
+      "dataPath": "$.response.body:$.id",
+      "params": {
+        "param": "$generators:#/generators/param"
+      }
+    }]
+  }
+}
+
+---
+
+TEMPLATE 4: DYNAMIC Chained (A → B → C)
+{
+  "generators": {
+    "level1": [{
+      "type": "dynamic",
+      "generatorOperationId": "Module1.Op1",
+      "dataPath": "$.response.body:$.id",
+      "name": "l1"
+    }],
+    "level2": [{
+      "type": "dynamic",
+      "generatorOperationId": "Module2.Op2",
+      "dataPath": "$.response.body:$.id",
+      "params": {"parentId": "$l1.value"}
+    }]
+  }
+}
+
+---
+
+TEMPLATE 5: Error Testing (Multiple Status Codes)
+{
+  "apis": {
+    "getById": {
+      "200": {"id": "#/generators/valid_id"},
+      "404": {"id": "#/generators/invalid_id"}
+    }
+  },
+  "generators": {
+    "valid_id": [{
+      "type": "dynamic",
+      "generatorOperationId": "Module.create",
+      "dataPath": "$.response.body:$.id"
+    }],
+    "invalid_id": [{
+      "type": "static",
+      "value": ["ID_NOTFOUND"]
+    }]
+  }
+}
+
+=================================================================================
+10. DECISION TREES
+=================================================================================
+
+DECISION TREE 1: Choosing Generator Type
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Question 1: Is the value fixed and predefined?
+├─ YES → Is it a simple enumeration or constant?
+│   ├─ YES → Use STATIC generator
+│   └─ NO → Continue to Question 2
+│
+└─ NO → Continue to Question 2
+
+Question 2: Do you need to call an API to get the value?
+├─ YES → Use DYNAMIC generator
+│   ├─ Are you chaining multiple calls?
+│   │   ├─ YES → Use "name" property for reuse
+│   │   └─ NO → Proceed normally
+│   └─ Can you consume multiple STATIC inputs?
+│       └─ YES → Add them all to "params"
+│
+└─ NO → Continue to Question 3
+
+Question 3: Do you need a custom Java function?
+├─ YES → Use REMOTE generator
+│   ├─ Is it org-specific enum? → Use DynamicDataProvider.getDynamicEnumValues
+│   ├─ Is it date computation? → Use DynamicDataProvider.getDateTime
+│   └─ Is it custom logic? → Use specific function
+│
+└─ NO → Continue to Question 4
+
+Question 4: Does the generator already exist elsewhere?
+├─ YES → Use REFERENCE generator
+│   ├─ Same module? → Use #/generators/name
+│   └─ Different module? → Use ../Module/.../name
+│
+└─ NO → Continue to Question 5
+
+Question 5: Should value change based on conditions?
+├─ YES → Use CONDITIONAL generator
+│   └─ Specify ifTrue and ifFalse
+│
+└─ NO → Something is wrong, review requirements
+
+---
+
+DECISION TREE 2: Single vs Multiple STATIC
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Question: How many different fields have fixed values?
+├─ ONE field
+│   └─ Use single STATIC generator
+│       Example: "status": ["Open", "Closed"]
+│
+└─ MULTIPLE fields (2+)
+    ├─ Are they all the same values?
+    │   ├─ YES → Use single STATIC, reference multiple times
+    │   │         Example: Both fields use ["Active", "Inactive"]
+    │   │         Create one generator, reference in both places
+    │   └─ NO → Use multiple STATIC generators (THIS IS CORRECT)
+    │           Example: "customer_name", "customer_email", "customer_phone"
+    │           Each has different values
+    │
+    └─ Are they logically related?
+        ├─ YES → Group them together in same section
+        │         Comment them by purpose (Entity Fields, Foundation, Error Testing)
+        └─ NO → Keep them separate but organized
+
+RESULT: Use multiple STATIC generators when:
+✓ Different fields → Different STATIC generators
+✓ Same values used multiple places → One STATIC, referenced multiple times
+✓ Foundation layer → Multiple related STATIC generators
+✓ Error testing → Separate STATIC for invalid values
+
+---
+
+DECISION TREE 3: Parameter Reference Syntax
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Question: Where is the value I need?
+
+Is it a STATIC or DYNAMIC generator in same file?
+├─ YES → Use: $generators:#/generators/generator_name
+│
+Is it the output of a chained DYNAMIC generator?
+├─ YES → Use: $generator_name.value (the "name" property value)
+│
+Is it from the current request's path?
+├─ YES → Use: $.input.path:$.paramName
+│
+Is it from the current request's query parameters?
+├─ YES → Use: $.input.query:$.paramName
+│
+Is it from the current request's body?
+├─ YES → Use: $.input.body:$.fieldName
+│
+Is it from the API response?
+├─ YES → Use: $.response.body:$.path.to.field[*].name
+│         (Only used in "dataPath" section, not "params")
+│
+Is it a generator in a different module?
+└─ YES → Use: ../ModuleName/file.json#/generators/name
+
+=================================================================================
+11. FOLDER STRUCTURE & ORGANIZATION
+=================================================================================
+
+Project Layout:
+
+/GENERATORS/
+│
+├── api-data-generators/          ← Main project folder
+│   ├── portal/                   ← Customer-facing features
+│   │   ├── ArticleFeedback/
+│   │   ├── Solution/
+│   │   ├── Category/
+│   │   ├── Comment/
+│   │   └── ... (40+ modules)
+│   │
+│   ├── support/                  ← Internal support system
+│   │   ├── Ticket/
+│   │   ├── Agent/
+│   │   ├── Department/
+│   │   ├── Contact/
+│   │   ├── Task/
+│   │   └── ... (100+ modules)
+│   │
+│   └── Generators-Patterns/      ← DOCUMENTATION & GUIDES (SEE BELOW)
+│
+├── Generators-Patterns/          ← KEY REFERENCE FILES
+│   ├── README.md
+│   ├── QUICK_REFERENCE.md
+│   ├── COMMON_INSTRUCTIONS.md
+│   ├── DATA_GENERATION_PATTERNS.md
+│   ├── DEPENDENCIES_MAP.md
+│   ├── OAS_TO_GENERATORS_GUIDE.md
+│   ├── TEMPLATES_AND_EXAMPLES.md
+│   ├── TYPE_USAGE_ANALYSIS.md
+│   ├── REMOTE_GENERATOR_GUIDE.md  ← Guide for REMOTE type
+│   └── API-README.md
+│
+├── New_Patterns/                 ← ANALYSIS & IMPROVEMENTS
+│   ├── README.md
+│   ├── QUICK_START.md
+│   ├── ANALYSIS_SUMMARY.md
+│   ├── TYPE_USAGE_ANALYSIS_REPORT.md
+│   ├── GENERATOR_TYPES_COMPARISON.md
+│   ├── ACTION_PLAN.md
+│   ├── MULTIPLE_STATIC_GENERATORS_GUIDE.md  ← Guide for multiple STATIC
+│   ├── VISUAL_SUMMARY.md
+│   ├── DOCUMENTATION_INDEX.md
+│   └── DELIVERABLES_CHECKLIST.md
+│
+├── Patterns/                     ← BASIC INSTRUCTIONS
+│   └── instructions.txt          ← Quick reference
+│
+├── oas/v1.0/                     ← OPENAPI SPECIFICATION FILES
+│   ├── portal/
+│   └── support/
+│
+└── Testing_OAS/                  ← TEST OAS FILES
+    ├── Customer_OAS.json
+    ├── Product_OAS.json
+    └── ... (more test files)
+
+DEPENDENCY BETWEEN FOLDERS:
+
+Patterns/instructions.txt          ← START HERE (quick reference)
+         ↓
+Generators-Patterns/QUICK_REFERENCE.md
+         ↓
+Generators-Patterns/COMMON_INSTRUCTIONS.md
+         ↓
+Generators-Patterns/DATA_GENERATION_PATTERNS.md
+         ↓
+Generators-Patterns/TEMPLATES_AND_EXAMPLES.md
+         ↓
+New_Patterns/GENERATOR_TYPES_COMPARISON.md
+         ↓
+New_Patterns/MULTIPLE_STATIC_GENERATORS_GUIDE.md
+
+=================================================================================
+12. DEPENDENCIES & GENERATION ORDER
+=================================================================================
+
+LAYER 1: Foundation (No Dependencies)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+STATIC generators for:
+- Status enums (Open, Closed, Pending)
+- Priority enums (High, Medium, Low)
+- Role types (Admin, User, Agent)
+- Business configuration (locale, timezone, country)
+- Channel types (email, phone, chat)
+
+Examples:
+- ticket_status = ["Open", "In Progress", "Resolved"]
+- ticket_priority = ["High", "Medium", "Low"]
+- locale = ["en", "es", "fr"]
+- timezone = ["UTC", "EST", "PST"]
+
+LAYER 2: User Entities (Depend on Layer 1)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Create:
+- Department (STATIC or DYNAMIC)
+- Role (STATIC)
+- Agent (needs Department from Layer 1)
+- User (needs Department)
+- Team (needs Agent)
+
+Dependency: Department → Agent → Team
+
+LAYER 3: Base Entities (Independent or Single Dependency)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Create:
+- Contact (independent)
+- Account (independent)
+- Product (independent)
+- Ticket (needs Agent + Department + Contact from Layers 1-2)
+
+Example: Ticket generator uses:
+- agent_id from Layer 2 (Agent)
+- department_id from Layer 2 (Department)
+- contact_id from Layer 3 (Contact)
+- status from Layer 1 (STATIC)
+
+LAYER 4: Relationship Entities (Depend on Layer 3)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Create:
+- TicketComment (needs Ticket from Layer 3)
+- Task (needs Agent, Contact, Ticket from Layers 2-3)
+- Call (needs Agent, Contact from Layer 2-3)
+- Article (needs Product from Layer 3)
+
+LAYER 5: Complex Entities (Depend on Layers 3-4)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Create:
+- Automation (needs Ticket, Agent, Department)
+- CustomView (needs Ticket)
+- Report (needs Ticket, Agent)
+- ArticleComment (needs Article, Contact)
+
+RECOMMENDED GENERATION ORDER:
+
+1. Create Layer 1 generators (STATIC - no API calls)
+2. Create Layer 2 generators (Agents, Departments - simple DYNAMIC)
+3. Create Layer 3 generators (Base entities - use Layer 2)
+4. Create Layer 4 generators (Relationships - use Layer 3)
+5. Create Layer 5 generators (Complex - use Layers 3-4)
+
+This ensures no forward dependencies and clean generation flow.
+
+=================================================================================
+13. STEP-BY-STEP EXAMPLES
+=================================================================================
+
+EXAMPLE 1: Converting Customer OAS File to Generators
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 1: Extract from OAS file
+- operationId: "createCustomer"
+- response: { id, name, email, status }
+- status enum: ["active", "inactive"]
+
+STEP 2: Determine generator type for each field
+- id → DYNAMIC (created by API)
+- name → STATIC (fixed values)
+- email → STATIC (fixed values)
+- status → STATIC (enum)
+
+STEP 3: Create configuration
+
+{
+  "apis": {
+    "createCustomer": {
+      "201": {
+        "name": "#/generators/customer_name",
+        "email": "#/generators/customer_email",
+        "status": "#/generators/customer_status"
+      },
+      "400": {
+        "error": "Invalid data"
+      }
+    }
+  },
+  "generators": {
+    "customer_name": [{
+      "type": "static",
+      "value": ["John Doe", "Jane Smith", "Maria Garcia"]
+    }],
+    "customer_email": [{
+      "type": "static",
+      "value": ["john@example.com", "jane@example.com", "maria@example.com"]
+    }],
+    "customer_status": [{
+      "type": "static",
+      "value": ["active", "inactive"]
+    }]
+  }
+}
+
+---
+
+EXAMPLE 2: Chained Dependencies (Department → Agent → Ticket)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+REQUIREMENT: Create Ticket that needs Department and Agent first
+
+{
+  "generators": {
+    "dept_name": [{
+      "type": "static",
+      "value": ["Engineering", "Support", "Sales"]
+    }],
+    "department_id": [{
+      "type": "dynamic",
+      "generatorOperationId": "Department.create",
+      "dataPath": "$.response.body:$.id",
+      "name": "dept",
+      "params": {
+        "name": "$generators:#/generators/dept_name"
+      }
+    }],
+    "agent_id": [{
+      "type": "dynamic",
+      "generatorOperationId": "Agent.create",
+      "dataPath": "$.response.body:$.id",
+      "name": "agent",
+      "params": {
+        "departmentId": "$dept.value"
+      }
+    }],
+    "ticket_id": [{
+      "type": "dynamic",
+      "generatorOperationId": "Ticket.create",
+      "dataPath": "$.response.body:$.id",
+      "params": {
+        "agentId": "$agent.value",
+        "departmentId": "$dept.value"
+      }
+    }]
+  }
+}
+
+KEY POINTS:
+- Step 1: STATIC for dept_name (no dependencies)
+- Step 2: DYNAMIC with "name": "dept" (makes output referenceable)
+- Step 3: DYNAMIC using "$dept.value" (references Step 2)
+- Step 4: DYNAMIC using both "$agent.value" and "$dept.value"
+
+=================================================================================
+14. USEFUL COMMANDS
+=================================================================================
+
+RUNNING THE GENERATOR:
+
+Generate all configurations:
+$ cd /GENERATORS
+
+This will:
+1. Find all OAS files in oas/v1.0/portal, oas/v1.0/support, Testing_OAS
+2. Extract operations and schemas
+3. Create test_data_generation_configurations.json in each directory
+
+VALIDATING CONFIGURATION:
+
+Check JSON syntax:
+$ python3 -m json.tool test_data_generation_configurations.json
+
+View formatted JSON:
+$ cat test_data_generation_configurations.json | python3 -m json.tool
+
+SEARCHING FOR GENERATORS:
+
+Find all STATIC generators:
+$ grep -r "\"type\": \"static\"" .
+
+Find all DYNAMIC generators:
+$ grep -r "\"type\": \"dynamic\"" .
+
+Find cross-module references:
+$ grep -r "../" test_data_generation_configurations.json
+
+Find missing "name" properties in DYNAMIC:
+$ grep -B3 "\"type\": \"dynamic\"" | grep -v "\"name\""
+
+ANALYZING DEPENDENCIES:
+
+List all generator names:
+$ grep "\"generators\": {" -A 500 test_data_generation_configurations.json | grep "^    \"" | cut -d'"' -f2
+
+List all APIs:
+$ grep "\"apis\": {" -A 500 test_data_generation_configurations.json | grep "^    \"" | cut -d'"' -f2
+
+=================================================================================
+SUMMARY OF KEY RULES
+=================================================================================
+
+1. ✅ STATIC Generator Rules
+   - Multiple STATIC generators ARE valid and recommended
+   - Use different STATIC for different fields
+   - Use snake_case naming convention
+   - Group related generators logically
+
+2. ✅ DYNAMIC Generator Rules
+   - Use for REST API calls
+   - Always include "dataPath" to extract response data
+   - Use "name" property when chaining
+   - Can consume multiple STATIC generators as input
+
+3. ✅ REMOTE Generator Rules
+   - Use for custom Java functions
+   - Perfect for organization-specific enums
+   - Use for computed values (dates, hashes)
+   - Include "orgId" when needed
+
+4. ✅ Reference Generator Rules
+   - Use for reusing existing generators
+   - Use ../ for cross-module references
+   - Use #/ for local file references
+
+5. ✅ DataPath Rules
+   - Always use: $.response.body:$.path
+   - Use [*] to get all array items
+   - Use . notation for nested paths
+   - Use [0] for first item if needed
+
+6. ✅ Parameter Reference Rules
+   - Use $generators:# for local generators
+   - Use $name.value for chained output
+   - Use $.input.path: for path parameters
+   - Use $.input.query: for query parameters
+   - Use $.input.body: for request body fields
+
+7. ✅ Dependency Rules
+   - No circular dependencies allowed
+   - Parent must be created before child
+   - Generate in layers (1-5)
+   - Use "name" property for chaining
+
+8. ✅ Error Testing Rules
+   - Create separate STATIC for invalid values
+   - Test multiple status codes (200, 404, 422, etc.)
+   - Use "nonexistent_*" naming for error scenarios
+   - Test both valid and invalid paths
+
+=================================================================================
+END OF CONSOLIDATED INSTRUCTIONS
+=================================================================================
+
+This document consolidates content from:
+- Patterns/instructions.txt
+- Generators-Patterns/ (10 files)
+- New_Patterns/ (13 files)
+
+For more details, see specific files referenced above.
+
+Last Updated: February 12, 2026
