@@ -4,7 +4,7 @@ The "apis" section will already be provided and must not be modified or regenera
 
 1. Read the provided OAS file completely.
 
-2. Read all rule files inside `Generators-Patterns`.
+2. Read all rule files inside `Generators-Patterns/README.md`.
 
 3. All generator type definition files (e.g., STATIC.md, DYNAMIC.md, REMOTE.md, REFERENCE.md, CONDITIONAL.md).
 
