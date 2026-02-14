@@ -315,11 +315,11 @@ This structured documentation ensures consistency, scalability, and reusability
 
 
 
-
-
-
-
-
-
-
-
+Collected Information:
+======================
+1) Verify no broken references.
+2) STATIC types correctly used for fixed values and enumerations
+3) DYNAMIC types correctly used for REST API calls
+4) REMOTE types correctly used for custom Java function calls
+5) Proper use of `"name"` property for multi-level generator chains
+6) Proper use of JSONPath expressions including filters and wildcards
