@@ -1,0 +1,85 @@
+{
+    "generators": {
+        "new_todo_id": [
+            {
+                "type": "dynamic",
+                "generatorOperationId": "getTodos",
+                "dataPath": "$.response.body:$.data[0].id"
+            }
+        ],
+        "new_todo_title": [
+            {
+                "type": "static",
+                "value": "Buy groceries"
+            }
+        ],
+        "new_todo_priority": [
+            {
+                "type": "static",
+                "value": "MEDIUM"
+            }
+        ],
+        "new_todo_status": [
+            {
+                "type": "static",
+                "value": "PENDING"
+            }
+        ],
+        "created_todo_id": [
+            {
+                "type": "reference",
+                "ref": "$.response.body:$.id"
+            }
+        ],
+        "request_todo_title": [
+            {
+                "type": "reference",
+                "ref": "$.input.body:$.title"
+            }
+        ],
+        "request_todo_due_date": [
+            {
+                "type": "reference",
+                "ref": "$.input.body:$.dueDate"
+            }
+        ],
+        "created_timestamp": [
+            {
+                "type": "remote",
+                "generatorMethod": "applicationDriver.rpc.desk.DynamicDataProvider.getDateTime",
+                "inputs": {
+                    "timeLine": "current",
+                    "format": "yyyy-MM-dd'T'HH:mm:ss'Z'"
+                }
+            }
+        ],
+        "due_date_future": [
+            {
+                "type": "remote",
+                "generatorMethod": "applicationDriver.rpc.desk.DynamicDataProvider.getDateTime",
+                "inputs": {
+                    "timeLine": "future",
+                    "format": "yyyy-MM-dd'T'HH:mm:ss'Z'"
+                }
+            }
+        ],
+        "invalid_todo_id": [
+            {
+                "type": "static",
+                "value": 99999
+            }
+        ],
+        "path_param_todo_id": [
+            {
+                "type": "reference",
+                "ref": "$.input.path:$.id"
+            }
+        ],
+        "query_todo_id": [
+            {
+                "type": "reference",
+                "ref": "$.input.query:$.id"
+            }
+        ]
+    }
+}
