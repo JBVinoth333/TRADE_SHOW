@@ -1,0 +1,21 @@
+{
+    "generators": {
+        "todo_id": [
+            {
+                "type": "dynamic",
+                "generatorOperationId": "getTodos",
+                "dataPath": "$.response.body:$.data[0].id"
+            }
+        ],
+        "delete_todo": [
+            {
+                "type": "dynamic",
+                "generatorOperationId": "deleteTodo",
+                "params": {
+                    "id": "{{todo_id}}"
+                },
+                "dataPath": "$.response.statusCode"
+            }
+        ]
+    }
+}
