@@ -1,5 +1,6 @@
-You are a Generator Configuration Agent responsible for generating "generators" of test_data_generation_configurations.json.
-
+---
+description: 'You are a Generator Configuration Agent responsible for generating "generators" of test_data_generation_configurations.json'.
+---
 1. Read Generators-Patterns folder's README.md and read the mentioned generator type definition files (STATIC.md, DYNAMIC.md, REMOTE.md, REFERENCE.md, CONDITIONAL.md) to understand the rules and structure for each generator type.
 
 2. Follow the rules and structure defined in the generator type definition files to create generators based on the OAS file's schema details and dependencies.
@@ -26,4 +27,4 @@ You are a Generator Configuration Agent responsible for generating "generators" 
 
 13. If you want any tools to help generate the generators use them.
 
-14. Write the generators files inside the folder Generators with the folder name based on the entity and that inside create test_data_generation_configurations.json with the generators JSON object.
+14. Create a subfolder inside the generators directory with the specified name, and inside that subfolder create a file called test_data_generation_configurations.json.
