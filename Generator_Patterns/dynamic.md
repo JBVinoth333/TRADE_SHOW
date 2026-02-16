@@ -2,11 +2,13 @@
 
 ## What It Does
 A DYNAMIC Generator fetches data from real API responses.
+
 ---
 
 ## When to Use DYNAMIC
 - When you need real system data that changes frequently (e.g., active agent IDs, current ticket IDs).
 - When there is an API available to fetch the required data.
+  
 ---
 
 ## Required Properties
@@ -69,87 +71,19 @@ Extract from object hierarchy:
 ```
 ---
 
-## Common Patterns
-
-### Status Variants
-Different generators for different statuses:
-```json
-"generators": {
-  "active_agent_id": [{
-    "type": "dynamic",
-    "generatorOperationId": "support.Agent.getAgents",
-    "dataPath": "$.response.body:$.data[*].id",
-    "params": {"status": "ACTIVE"}
-  }],
-  "inactive_agent_id": [{
-    "type": "dynamic",
-    "generatorOperationId": "support.Agent.getAgents",
-    "dataPath": "$.response.body:$.data[*].id",
-    "params": {"status": "INACTIVE"}
-  }]
-}
-```
-
-### Error Testing
-Valid vs invalid data:
-```json
-"generators": {
-  "valid_agent_id": [{
-    "type": "dynamic",
-    "generatorOperationId": "support.Agent.getAgents",
-    "dataPath": "$.response.body:$.data[0].id"
-  }],
-  "invalid_agent_id": [{
-    "type": "static",
-    "value": 99999
-  }]
-}
-```
-
-### Multiple Entities
-Reference different APIs:
-```json
-"generators": {
-  "agent_id": [{
-    "type": "dynamic",
-    "generatorOperationId": "support.Agent.getAgents",
-    "dataPath": "$.response.body:$.data[0].id"
-  }],
-  "department_id": [{
-    "type": "dynamic",
-    "generatorOperationId": "support.Department.getDepartments",
-    "dataPath": "$.response.body:$.data[0].id"
-  }],
-  "contact_id": [{
-    "type": "dynamic",
-    "generatorOperationId": "support.Contact.getContacts",
-    "dataPath": "$.response.body:$.data[0].id"
-  }]
-}
-```
----
-
-### Multiple Values (Array)
-Use `[*]` suffix for array parameters:
-```json
-"agent_ids[*]": "#/generators/agent_id"
-```
----
-
 ## Best Practices
 
 **Do:**
 - Use params to filter for specific scenarios
 - Give descriptive names showing the filter/status
 - Verify operationId exists in OpenAPI specification
-- Test the API manually first to confirm dataPath is correct
-- 
+  
 **Avoid:**
 - Assuming first result is always valid
 - Generic names like "id"
 - Forgetting `[*]` on array parameters
 - Hardcoding fallback without DYNAMIC
-- 
+  
 ---
 
 ## Check
@@ -165,4 +99,4 @@ Use `[*]` suffix for array parameters:
 
 ---
 
-*Last Updated: 11 February 2026*
+*Last Updated: 16 February 2026*
