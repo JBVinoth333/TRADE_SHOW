@@ -1,5 +1,26 @@
 {
     "generators": {
+<<<<<<< HEAD
+        "todo_id": [
+            {
+                "type": "dynamic",
+                "generatorOperationId": "getTodos",
+                "dataPath": "$.response.body:$.data[0].id"
+            }
+        ],
+        "delete_todo": [
+            {
+                "type": "dynamic",
+                "generatorOperationId": "deleteTodo",
+                "params": {
+                    "id": "{{todo_id}}"
+                },
+                "dataPath": "$.response.statusCode"
+            }
+        ]
+    }
+}
+=======
         "ticket_id": [
             {
                 "type": "dynamic",
@@ -95,3 +116,4 @@
         ]
     }
 }
+>>>>>>> 3dd49d9c9afc776727226db69bfb21fed9f9c9d0
