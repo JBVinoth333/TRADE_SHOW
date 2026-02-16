@@ -1,52 +1,15 @@
 {
     "generators": {
-        "new_ticket_id": [
-            {
-                "type": "dynamic",
-                "generatorOperationId": "getTickets",
-                "dataPath": "$.response.body:$.data[0].id"
-            }
-        ],
-        "new_ticket_title": [
-            {
-                "type": "static",
-                "value": "User cannot reset password"
-            }
-        ],
-        "new_ticket_priority": [
-            {
-                "type": "static",
-                "value": 2
-            }
-        ],
-        "new_ticket_status": [
-            {
-                "type": "static",
-                "value": "OPEN"
-            }
-        ],
-        "created_ticket_id": [
+        "request_ticket_subject": [
             {
                 "type": "reference",
-                "ref": "$.response.body:$.id"
+                "ref": "$.input.body:$.subject"
             }
         ],
-        "created_ticket_title": [
+        "request_ticket_description": [
             {
                 "type": "reference",
-                "ref": "$.response.body:$.title"
-            }
-        ],
-        "created_ticket_status": [
-            {
-                "type": "reference",
-                "ref": "$.response.body:$.status"
-            }
-        ],
-        "request_ticket_title": [
-            {
-                "type": "reference",
-                "ref": "$.input.body:$.title"
+                "ref": "$.input.body:$.description"
             }
         ],
         "request_ticket_priority": [
@@ -55,10 +18,77 @@
                 "ref": "$.input.body:$.priority"
             }
         ],
-        "request_ticket_status": [
+        "created_ticket_id": [
+            {
+                "type": "dynamic",
+                "generatorOperationId": "getTickets",
+                "dataPath": "$.response.body:$.data[0].id"
+            }
+        ],
+        "created_ticket_subject": [
             {
                 "type": "reference",
-                "ref": "$.input.body:$.status"
+                "ref": "$.response.body:$.subject"
+            }
+        ],
+        "created_ticket_status": [
+            {
+                "type": "reference",
+                "ref": "$.response.body:$.status"
+            }
+        ],
+        "any_ticket_id": [
+            {
+                "type": "dynamic",
+                "generatorOperationId": "getTickets",
+                "dataPath": "$.response.body:$.data[0].id"
+            }
+        ],
+        "open_ticket_id": [
+            {
+                "type": "dynamic",
+                "generatorOperationId": "getTickets",
+                "dataPath": "$.response.body:$.data[*].id",
+                "params": {
+                    "status": "OPEN"
+                }
+            }
+        ],
+        "ticket_status": [
+            {
+                "type": "static",
+                "value": ["OPEN", "ONHOLD", "CLOSED", "PENDING"]
+            }
+        ],
+        "ticket_priority": [
+            {
+                "type": "static",
+                "value": 2
+            }
+        ],
+        "created_timestamp": [
+            {
+                "type": "remote",
+                "generatorMethod": "applicationDriver.rpc.desk.DynamicDataProvider.getDateTime",
+                "inputs": {
+                    "timeLine": "current",
+                    "format": "yyyy-MM-dd'T'HH:mm:ss'Z'"
+                }
+            }
+        ],
+        "ticket_number": [
+            {
+                "type": "remote",
+                "generatorMethod": "com.example.TicketDataGenerator.generateTicketNumber",
+                "params": {
+                    "prefix": "TKT"
+                }
+            }
+        ],
+        "invalid_ticket_id": [
+            {
+                "type": "static",
+                "value": 99999
             }
         ],
         "path_param_ticket_id": [
@@ -71,35 +101,6 @@
             {
                 "type": "reference",
                 "ref": "$.input.query:$.id"
-            }
-        ],
-        "generate_uuid": [
-            {
-                "type": "remote",
-                "generatorMethod": "com.example.TicketDataGenerator.generateUUID"
-            }
-        ],
-        "generate_timestamp": [
-            {
-                "type": "remote",
-                "generatorMethod": "com.example.TicketDataGenerator.generateTimestamp"
-            }
-        ],
-        "generate_ticket_number": [
-            {
-                "type": "remote",
-                "generatorMethod": "com.example.TicketDataGenerator.generateTicketNumber",
-                "params": {
-                    "prefix": "TKT",
-                    "min": "1000",
-                    "max": "9999"
-                }
-            }
-        ],
-        "invalid_ticket_id": [
-            {
-                "type": "static",
-                "value": 99999
             }
         ]
     }
