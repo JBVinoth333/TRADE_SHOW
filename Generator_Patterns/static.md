@@ -69,7 +69,7 @@ STATIC supports all JSON types:
 - **Tags/Arrays:** Use static arrays, e.g., `["urgent", "escalated"]`, `["read", "write"]`.
 - **Error Testing:** Provide both valid and invalid static values for testing, e.g., `"OPEN"`, `"INVALID_STATUS"`.
 - **Custom Fields:** Use static objects for custom fields, e.g., `{ "field_100": "Support", "field_101": "North America" }`.
-
+  
 ---
 
 ## Type Mapping
@@ -83,7 +83,7 @@ STATIC supports all JSON types:
 - **array:** ["a", "b"]
 - **object:** {"key": "value"}
 - **null:** null
-
+  
 ---
 
 ## Best Practices
@@ -95,11 +95,11 @@ STATIC supports all JSON types:
 - Comment complex object structures
 
 **Avoid:**
-- Using STATIC for changing values (use DYNAMIC)
-- Using STATIC for timestamps (use REMOTE)
-- Using STATIC for request data (use REFERENCE)
+- Using STATIC for changing values
+- Using STATIC for timestamps
+- Using STATIC for request data
 - Generic names like "value"
-
+  
 ---
 
 *Last Updated: 16 February 2026*
