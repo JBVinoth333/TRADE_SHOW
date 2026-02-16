@@ -26,4 +26,4 @@ You are a Generator Configuration Agent responsible for generating "generators" 
 
 13. If you want any tools to help generate the generators use them.
 
-14. Write the generators files inside the folder TRADE_SHOW/Generators with the folder name test_data_generation_configurations.json.
+14. Write the generators files inside the folder Generators with the folder name based on the entity and that inside create test_data_generation_configurations.json with the generators JSON object.
