@@ -27,7 +27,7 @@ description: 'You are a Generator Configuration Agent responsible for generating
 
 13. Do not include explanations, comments, markdown, or extra text.
 
-14. Reuse existing generators whenever possible.
+14. If you want to refer any folders and existing generators use them.
 
 15. If you want any tools to help generate the generators use them.
 
