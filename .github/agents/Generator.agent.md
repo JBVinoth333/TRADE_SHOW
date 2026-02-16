@@ -19,12 +19,16 @@ description: 'You are a Generator Configuration Agent responsible for generating
 
 9. If required information is missing, ask the user before proceeding.
 
-10. Output must contain only the "generators" JSON object.
+10. Follow exact reference syntax, dataPath format, and structure as defined in the rule files and README.md.
 
-11. Do not include explanations, comments, markdown, or extra text.
+11. Do not modify or generate any section other than "generators" in the test_data_generation_configurations.json file.
 
-12. Reuse existing generators whenever possible.
+12. Output must contain only the "generators" JSON object.
 
-13. If you want any tools to help generate the generators use them.
+13. Do not include explanations, comments, markdown, or extra text.
 
-14. Create a subfolder inside the Generators directory with the specified name, and inside that subfolder create a file called test_data_generation_configurations.json.
+14. Reuse existing generators whenever possible.
+
+15. If you want any tools to help generate the generators use them.
+
+16. Create a subfolder inside the Generators directory with the specified name, and inside that subfolder create a file called test_data_generation_configurations.json.
