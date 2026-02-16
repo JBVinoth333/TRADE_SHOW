@@ -1,0 +1,119 @@
+{
+    "generators": {
+        "todolist_item_id": [
+            {
+                "type": "dynamic",
+                "generatorOperationId": "getTodolists",
+                "dataPath": "$.response.body:$.items[0].id"
+            }
+        ],
+        "active_item_ids": [
+            {
+                "type": "dynamic",
+                "generatorOperationId": "getTodolists",
+                "dataPath": "$.response.body:$.items[*].id",
+                "params": {
+                    "completed": false
+                }
+            }
+        ],
+        "completed_item_ids": [
+            {
+                "type": "dynamic",
+                "generatorOperationId": "getTodolists",
+                "dataPath": "$.response.body:$.items[*].id",
+                "params": {
+                    "completed": true
+                }
+            }
+        ],
+        "item_title": [
+            {
+                "type": "static",
+                "value": "Draft weekly status report"
+            }
+        ],
+        "item_status_open": [
+            {
+                "type": "static",
+                "value": "OPEN"
+            }
+        ],
+        "item_status_done": [
+            {
+                "type": "static",
+                "value": "DONE"
+            }
+        ],
+        "item_priority_high": [
+            {
+                "type": "static",
+                "value": 1
+            }
+        ],
+        "item_priority_low": [
+            {
+                "type": "static",
+                "value": 3
+            }
+        ],
+        "item_is_active": [
+            {
+                "type": "static",
+                "value": true
+            }
+        ],
+        "created_item_id": [
+            {
+                "type": "reference",
+                "ref": "$.response.body:$.id"
+            }
+        ],
+        "created_item_title": [
+            {
+                "type": "reference",
+                "ref": "$.response.body:$.title"
+            }
+        ],
+        "request_item_id": [
+            {
+                "type": "reference",
+                "ref": "$.input.path:$.id"
+            }
+        ],
+        "request_item_title": [
+            {
+                "type": "reference",
+                "ref": "$.input.body:$.title"
+            }
+        ],
+        "query_param_item_id": [
+            {
+                "type": "reference",
+                "ref": "$.input.query:$.id"
+            }
+        ],
+        "generate_timestamp": [
+            {
+                "type": "remote",
+                "generatorMethod": "com.example.TodoDataGenerator.generateTimestamp"
+            }
+        ],
+        "generate_uuid": [
+            {
+                "type": "remote",
+                "generatorMethod": "com.example.TodoDataGenerator.generateUUID"
+            }
+        ],
+        "generate_random_item_id": [
+            {
+                "type": "remote",
+                "generatorMethod": "com.example.TodoDataGenerator.generateRandomItemId",
+                "params": {
+                    "min": "100",
+                    "max": "99999"
+                }
+            }
+        ]
+    }
+}

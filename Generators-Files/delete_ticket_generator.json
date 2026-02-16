@@ -1,0 +1,97 @@
+{
+    "generators": {
+        "ticket_id": [
+            {
+                "type": "dynamic",
+                "generatorOperationId": "getTickets",
+                "dataPath": "$.response.body:$.data[0].id"
+            }
+        ],
+        "open_ticket_ids": [
+            {
+                "type": "dynamic",
+                "generatorOperationId": "getTickets",
+                "dataPath": "$.response.body:$.data[*].id",
+                "params": {
+                    "status": "OPEN"
+                }
+            }
+        ],
+        "closed_ticket_ids": [
+            {
+                "type": "dynamic",
+                "generatorOperationId": "getTickets",
+                "dataPath": "$.response.body:$.data[*].id",
+                "params": {
+                    "status": "CLOSED"
+                }
+            }
+        ],
+        "ticket_title": [
+            {
+                "type": "static",
+                "value": "Investigate login failure"
+            }
+        ],
+        "ticket_priority_high": [
+            {
+                "type": "static",
+                "value": 1
+            }
+        ],
+        "ticket_status_open": [
+            {
+                "type": "static",
+                "value": "OPEN"
+            }
+        ],
+        "ticket_status_closed": [
+            {
+                "type": "static",
+                "value": "CLOSED"
+            }
+        ],
+        "created_ticket_id": [
+            {
+                "type": "reference",
+                "ref": "$.response.body:$.id"
+            }
+        ],
+        "created_ticket_title": [
+            {
+                "type": "reference",
+                "ref": "$.response.body:$.title"
+            }
+        ],
+        "request_ticket_id": [
+            {
+                "type": "reference",
+                "ref": "$.input.path:$.id"
+            }
+        ],
+        "request_ticket_title": [
+            {
+                "type": "reference",
+                "ref": "$.input.body:$.title"
+            }
+        ],
+        "query_param_ticket_id": [
+            {
+                "type": "reference",
+                "ref": "$.input.query:$.id"
+            }
+        ],
+        "generate_uuid": [
+            {
+                "type": "remote",
+                "generatorMethod": "com.example.TicketDataGenerator.generateUUID"
+            }
+        ],
+        "generate_timestamp": [
+            {
+                "type": "remote",
+                "generatorMethod": "com.example.TicketDataGenerator.generateTimestamp"
+            }
+        ]
+    }
+}
