@@ -43,9 +43,9 @@ This framework helps you generate test data for OpenAPI specifications. You can 
 | Type | Purpose | When to Use |
 |------|---------|-------------|
 | [Dynamic](./dynamic.md) | Fetch IDs from APIs | Get actual system data |
-| [Remote](./remote.md) | Call system functions | Timestamps, enums, system values |
+| [Remote](./remote2.md) | Call system functions | Timestamps, enums, system values |
 | [Static](./static.md) | Fixed constant values | Predetermined values |
-| [Reference](./reference.md) | Use request data | Pass-through from incoming request |
+| [Reference](./reference2.md) | Use request data | Pass-through from incoming request |
 | [Conditional](./conditional.md) | Logic-based branching | Value depends on conditions |
 
 ## Core Rules
