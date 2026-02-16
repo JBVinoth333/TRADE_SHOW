@@ -1,12 +1,35 @@
-# Data Generation Framework - Rules & Instructions
+# Data Generation Framework - Usage & Rules
 
 ## Overview
 
-A framework that generates test data for OpenAPI specifications. Define generator rules once and generate consistent test data for all parameters.
+This framework generates test data for OpenAPI specifications. You can reuse existing generators and OAS files to quickly build new generators for your APIs.
 
-**File Location:** `api-data-generators/support/{EntityName}/test_data_generation_configurations.json`
+### Where to Find Existing Generators
 
-**Basic Structure:**
+- **Generators:**
+  - All generator configuration files are in:
+    - `source/api-data-generators/support/{EntityName}/test_data_generation_configurations.json`
+    - Example: `source/api-data-generators/support/Ticket/test_data_generation_configurations.json`
+
+- **OpenAPI Specifications (OAS):**
+  - OAS files are in:
+    - `source/openapi-specifications/v1.0/support/{EntityName}.json`
+    - Example: `source/openapi-specifications/v1.0/support/Ticket.json`
+
+### How to Use Existing Generators
+
+1. **Reference a generator** from another entity using the `$ref` syntax:
+   - Example:
+     ```json
+     "contactId": "../Contact/test_data_generation_configurations.json#/generators/contact_id"
+     ```
+
+2. **Copy and modify** generator blocks from existing files to suit your new API or entity.
+
+3. **Check the OAS file** for required fields and operations. Use the operationId and schema from the OAS to guide your generator structure.
+
+### Basic Generator Structure
+
 ```json
 {
   "generators": {
@@ -15,9 +38,7 @@ A framework that generates test data for OpenAPI specifications. Define generato
 }
 ```
 
-## Rules & Instructions
-
-### 1. Five Generator Types
+## Generator Types
 
 | Type | Purpose | When to Use |
 |------|---------|-------------|
@@ -27,15 +48,12 @@ A framework that generates test data for OpenAPI specifications. Define generato
 | [Reference](./reference.md) | Use request data | Pass-through from incoming request |
 | [Conditional](./conditional.md) | Logic-based branching | Value depends on conditions |
 
-### 2. Three Core Rules
-
-Every generator MUST follow these rules:
+## Core Rules
 
 1. **Specify "type"** - Declare which generator type
    ```json
    { "type": "static", "value": "OPEN" }
    ```
-
 2. **Use arrays** - Wrap all generators in arrays
    ```json
    "status": [ { "type": "static", "value": "OPEN" } ]
