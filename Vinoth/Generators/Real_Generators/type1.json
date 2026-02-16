@@ -1,0 +1,59 @@
+{
+    "generators": {
+        "ticket_id": [
+            {
+                "type": "dynamic",
+                "generatorOperationId": "support.Ticket.getTickets",
+                "dataPath": "$.response.body:$.data[0].id"
+            }
+        ],
+        "priority": [
+            {
+                "type": "static",
+                "value": "HIGH"
+            }
+        ],
+        "created_timestamp": [
+            {
+                "type": "remote",
+                "generatorMethod": "applicationDriver.rpc.desk.DynamicDataProvider.getDateTime",
+                "inputs": {
+                    "format": "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+                    "timezone": "UTC"
+                }
+            }
+        ],
+        "requester_id": [
+            {
+                "type": "reference",
+                "ref": "$.input.body:$.requesterId"
+            }
+        ],
+        "assignee_id": [
+            {
+                "type": "conditional",
+                "conditions": [
+                    {
+                        "when": {
+                            "key": "$.input.body:priority",
+                            "equals": "HIGH"
+                        },
+                        "then": {
+                            "use": "$generators:#/generators/ticket_id"
+                        }
+                    },
+                    {
+                        "when": {
+                            "key": "$.input.body:priority",
+                            "equals": "LOW"
+                        },
+                        "then": {
+                            "use": "$generators:#/generators/requester_id"
+                        }
+                    }
+                ],
+                "else": "$generators:#/generators/priority"
+            }
+        ]
+    }
+}

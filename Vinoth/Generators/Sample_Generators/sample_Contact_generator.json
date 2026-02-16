@@ -1,0 +1,48 @@
+{
+    "generators": {
+        "contact_id": [
+            {
+                "type": "dynamic",
+                "generatorOperationId": "support.Contact.listContacts",
+                "dataPath": "$.response.body:$.data[*].id"
+            }
+        ],
+        "contact_email": [
+            {
+                "type": "static",
+                "value": "contact@example.com"
+            }
+        ],
+        "contact_status": [
+            {
+                "type": "remote",
+                "generatorMethod": "applicationDriver.rpc.desk.DynamicDataProvider.getDynamicEnumValues",
+                "inputs": {
+                    "fieldName": "status",
+                    "moduleName": "Contact",
+                    "orgId": "$.input.query:$.orgId"
+                }
+            }
+        ],
+        "contact_account_id": [
+            {
+                "type": "reference",
+                "ref": "$.input.body:$.accountId"
+            }
+        ],
+        "contact_is_primary": [
+            {
+                "type": "conditional",
+                "condition": "status == 'VERIFIED'",
+                "then": {
+                    "type": "static",
+                    "value": true
+                },
+                "else": {
+                    "type": "static",
+                    "value": false
+                }
+            }
+        ]
+    }
+}

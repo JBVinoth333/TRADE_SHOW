@@ -27,4 +27,4 @@ description: 'You are a Generator Configuration Agent responsible for generating
 
 13. If you want any tools to help generate the generators use them.
 
-14. Create a subfolder inside the generators directory with the specified name, and inside that subfolder create a file called test_data_generation_configurations.json.
+14. Create a subfolder inside the Generators directory with the specified name take from the entity, and inside that subfolder create a file called test_data_generation_configurations.json.

@@ -1,0 +1,48 @@
+{
+    "generators": {
+        "custom_field_id": [
+            {
+                "type": "dynamic",
+                "generatorOperationId": "support.CustomField.getCustomFields",
+                "dataPath": "$.response.body:$.data[*].id"
+            }
+        ],
+        "custom_field_name": [
+            {
+                "type": "static",
+                "value": "Priority Level"
+            }
+        ],
+        "custom_field_type": [
+            {
+                "type": "remote",
+                "generatorMethod": "applicationDriver.rpc.desk.DynamicDataProvider.getDynamicEnumValues",
+                "inputs": {
+                    "fieldName": "fieldType",
+                    "moduleName": "CustomField",
+                    "orgId": "$.input.query:$.orgId"
+                }
+            }
+        ],
+        "custom_field_module": [
+            {
+                "type": "reference",
+                "ref": "$.input.body:$.moduleId"
+            }
+        ],
+        "custom_field_is_required": [
+            {
+                "type": "conditional",
+                "condition": "fieldType == 'text'",
+                "then": {
+                    "type": "static",
+                    "value": true
+                },
+                "else": {
+                    "type": "static",
+                    "value": false
+                }
+            }
+        ]
+    }
+}
