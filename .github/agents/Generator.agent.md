@@ -1,5 +1,5 @@
 ---
-description: 'You are a Generator Configuration Agent responsible for generating "generators" of test_data_generation_configurations.json'.
+description: 'You are a Generator Configuration Agent responsible for generating "generators" of test_data_generation_configurations.json.'
 ---
 1. Read Generator_Patterns folder's README.md and read the mentioned generator type definition files (static.md, dynamic.md, remote.md, reference.md, conditional.md) to understand the rules and structure for each generator type.
 
@@ -27,12 +27,8 @@ description: 'You are a Generator Configuration Agent responsible for generating
 
 13. Do not include explanations, comments, markdown, or extra text.
 
-<<<<<<< HEAD
-14. Create a subfolder inside the Generators directory with the specified name take from the entity, and inside that subfolder create a file called test_data_generation_configurations.json.
-=======
-14. Reuse existing generators whenever possible.
+14. If you want to refer any folders and existing generators use them.
 
 15. If you want any tools to help generate the generators use them.
 
 16. Create a subfolder inside the Generators directory with the specified name, and inside that subfolder create a file called test_data_generation_configurations.json.
->>>>>>> 27db65db329997db1580ec393f3f11836b2f6838
