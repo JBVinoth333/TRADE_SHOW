@@ -17,179 +17,72 @@ Use STATIC when:
 - Tags and categories
 - Version numbers
 
-**Common Scenarios:**
-- Fixed status code values
-- Constant priority levels
-- Boolean active/deleted flags
-- Default values
-- Invalid values for error testing
-
 ---
 
 ## Required Properties
 
-| Property | Type | Purpose |
-|----------|------|---------|
-| `type` | string | Must be `"static"` |
-| `value` | any | The constant value |
+| Property | Type   | Purpose            |
+| -------- | ------ | ------------------ |
+| `type`   | string | Must be `"static"` |
+| `value`  | any    | The constant value |
 
 ## Optional Properties
 
-| Property | Type | Purpose |
-|----------|------|---------|
-| `name` | string | Generator identifier |
+| Property | Type   | Purpose              |
+| -------- | ------ | -------------------- |
+| `name`   | string | Generator identifier |
 
 ---
 
 ## Supported Value Types
 
 STATIC supports all JSON types:
-
-| Type | Example | JSONPath |
-|------|---------|----------|
-| String | `"OPEN"` | `"value": "OPEN"` |
-| Number | `42` | `"value": 42` |
-| Decimal | `99.99` | `"value": 99.99` |
-| Boolean | `true` | `"value": true` |
-| Null | `null` | `"value": null` |
-| Array | `["a", "b"]` | `"value": ["option1"]` |
-| Object | `{"key": "val"}` | `"value": {"f_100": "val"}` |
+`value` accepts any valid JSON type (string, number, boolean, object, array, or null).
 
 ---
 
-## Examples
-
-### String Value
-```json
+## Meta Schema
+``` json
 {
-  "type": "static",
-  "value": "OPEN"
-}
-```
-
-### Number Value
-```json
-{
-  "type": "static",
-  "value": 42
-}
-```
-
-### Boolean Value
-```json
-{
-  "type": "static",
-  "value": true
-}
-```
-
-### Array Value
-```json
-{
-  "type": "static",
-  "value": ["option1", "option2"]
-}
-```
-
-### Object Value
-```json
-{
-  "type": "static",
-  "value": {
-    "field_100": "value",
-    "field_101": "another"
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["type", "value"],
+  "additionalProperties": false,
+  "properties": {
+    "type": {
+      "const": "static"
+    },
+    "value": true
   }
 }
 ```
-
-### Null Value
-```json
-{
-  "type": "static",
-  "value": null
-}
-```
-
 ---
 
 ## Common Patterns
 
-### Status Variants
-Different status values:
-```json
-"generators": {
-  "status_open": [{"type": "static", "value": "OPEN"}],
-  "status_closed": [{"type": "static", "value": "CLOSED"}],
-  "status_pending": [{"type": "static", "value": "PENDING"}]
-}
-```
 
-### Priority Levels
-Different priority values:
-```json
-"generators": {
-  "priority_critical": [{"type": "static", "value": "CRITICAL"}],
-  "priority_high": [{"type": "static", "value": "HIGH"}],
-  "priority_low": [{"type": "static", "value": "LOW"}]
-}
-```
+### Common Patterns (Simplified)
 
-### Boolean Flags
-On/off values:
-```json
-"generators": {
-  "is_active": [{"type": "static", "value": true}],
-  "is_deleted": [{"type": "static", "value": false}]
-}
-```
-
-### Tags/Arrays
-Array of values:
-```json
-"generators": {
-  "default_tags": [{"type": "static", "value": ["urgent", "escalated"]}],
-  "permissions": [{"type": "static", "value": ["read", "write"]}]
-}
-```
-
-### Error Testing
-Valid vs invalid:
-```json
-"generators": {
-  "valid_status": [{"type": "static", "value": "OPEN"}],
-  "invalid_status": [{"type": "static", "value": "INVALID_STATUS"}]
-}
-```
-
-### Custom Fields
-Object structure:
-```json
-"generators": {
-  "custom_fields": [{
-    "type": "static",
-    "value": {
-      "field_100": "Support",
-      "field_101": "North America"
-    }
-  }]
-}
-```
+- **Status Values:** Use static generators for status like "OPEN", "CLOSED", "PENDING".
+- **Priority Levels:** Use static generators for priority like "CRITICAL", "HIGH", "LOW".
+- **Boolean Flags:** Use static generators for true/false, e.g., `is_active: true`, `is_deleted: false`.
+- **Tags/Arrays:** Use static arrays, e.g., `["urgent", "escalated"]`, `["read", "write"]`.
+- **Error Testing:** Provide both valid and invalid static values for testing, e.g., `"OPEN"`, `"INVALID_STATUS"`.
+- **Custom Fields:** Use static objects for custom fields, e.g., `{ "field_100": "Support", "field_101": "North America" }`.
 
 ---
 
 ## Type Mapping
 
-Match values to OpenAPI specification types:
+### Type Mapping (Simplified)
 
-| OpenAPI Type | STATIC Value | Example |
-|--------------|---|---|
-| string | Quoted text | `"OPEN"` |
-| integer | Number (no quotes) | `42` |
-| number | Decimal (no quotes) | `99.99` |
-| boolean | true or false | `true` |
-| array | [ ] brackets | `["a", "b"]` |
-| object | { } braces | `{"key": "value"}` |
-| null | null keyword | `null` |
+- **string:** "OPEN"
+- **integer:** 42
+- **number:** 99.99
+- **boolean:** true / false
+- **array:** ["a", "b"]
+- **object:** {"key": "value"}
+- **null:** null
 
 ---
 
@@ -209,35 +102,4 @@ Match values to OpenAPI specification types:
 
 ---
 
-## Troubleshooting
-
-### Value Type Mismatch
-**Ensure:**
-- String values are quoted: `"OPEN"`
-- Numbers not quoted: `42`
-- Booleans lowercase: `true` not `True`
-
-### Complex Objects Wrong
-**Verify:**
-- All braces and brackets matched
-- Field names quoted: `"field_100"`
-- Commas between properties
-
-### Array Elements
-**Remember:**
-- Single item: `["single"]`
-- Multiple: `["one", "two"]`
-- Objects in array: `[{"id": 1}]`
-
----
-
-## Reference
-
-- **Fetch Method:** Hardcoded values
-- **Data Type:** Any JSON type
-- **Scope:** Fixed per generator
-- **Updates:** Never changes
-
----
-
-*Last Updated: 11 February 2026*
+*Last Updated: 16 February 2026*

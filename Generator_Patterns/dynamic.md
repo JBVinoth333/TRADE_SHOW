@@ -2,7 +2,6 @@
 
 ## What It Does
 A DYNAMIC Generator fetches data from real API responses.
- <!-- It allows you to extract values like IDs, names, or other fields directly from the system under test, ensuring that your tests use valid and up-to-date data. -->
 ---
 
 ## When to Use DYNAMIC
@@ -30,11 +29,6 @@ A DYNAMIC Generator fetches data from real API responses.
 ## DataPath Format
 
 **Pattern:** `$.response.body:$.path.to.data`
-
-<!-- **Common Selectors:**
-- `[*]` - Get all array elements
-- `[0]` - Get first element only
-- `.fieldName` - Get specific field -->
 
 **Examples:**
 - `$.response.body:$.data[0].id` - First item ID
