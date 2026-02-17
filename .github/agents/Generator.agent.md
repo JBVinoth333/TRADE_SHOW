@@ -1,6 +1,5 @@
 ---
 description: 'You are a Generator Configuration Agent responsible for generating "generators".'
-
 ---
 1. Read All files in the Generator_Patterns folder to understand the patterns.
 
