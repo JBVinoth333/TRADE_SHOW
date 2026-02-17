@@ -8,9 +8,9 @@ description: 'You are a Generator Configuration Agent responsible for generating
 
 3. From the OAS, extract only the schema details and dependencies needed to build generators.
 
-4. Choose the correct generator type based strictly on its definition file.
+4. First define the parent generator, then define the generator that depends on it.
 
-5. Define generators in proper dependency order (parent first, then dependent).
+5. Choose the correct generator type based strictly on its definition file.
 
 6. Make sure all references point to valid, existing generators.
 
@@ -18,9 +18,9 @@ description: 'You are a Generator Configuration Agent responsible for generating
 
 8. If required information is missing, ask the user before proceeding.
 
-9. Follow exact reference syntax, dataPath format, and structure as defined in the rule files and README.md.
+9. Use clear and consistent names for generators based on the field name.
 
-10. Follow simple and meaningful and predictable naming conventions based on field names and schema paths to ensure clarity and maintainability of the generators.
+10. Follow exact reference syntax, dataPath format, and structure as defined in the rule files and README.md.
 
 11. Output must contain only the "generators" JSON object.
 
