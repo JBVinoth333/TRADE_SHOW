@@ -1,0 +1,24 @@
+{
+  "generators": {
+    "ticket_id": [
+      {
+        "type": "dynamic",
+        "generatorOperationId": "support.Ticket.createTicket",
+        "dataPath": "$.response.body:$.id",
+        "name": "tickets"
+      }
+    ],
+    "edit_ticket": [
+      {
+        "type": "dynamic",
+        "generatorOperationId": "support.Ticket.updateTicket",
+        "params": {
+          "ticketId": "{{ticket_id}}",
+          "status": "OPEN",
+          "priority": "HIGH"
+        },
+        "dataPath": "$.response.body"
+      }
+    ]
+  }
+}
