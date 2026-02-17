@@ -7,9 +7,14 @@ description: 'Generator Configuration Agent responsible for generating "generato
 
 2. Follow the rules and structure defined in the generator type definition files to create generators based on the OAS file's schema details and dependencies.
 
-3. Create new generators file don't modify existing ones. Each generator should be defined in its own file within the appropriate subfolder under the Generators directory.
+3. Create new generators file don't modify existing ones. 
+    <!-- - What if my use case is to modify the generator -->
+    <!-- - Ask permission to modify the existing generator -->
+
+Each generator should be defined in its own file within the appropriate subfolder under the Generators directory.
 
 3. From the OAS, extract only the schema details and dependencies needed to build generators.
+    <!-- - We already generated the pattern then why we need OAS file -->
 
 4. First define the parent generator, then define the generator that depends on it.
 
@@ -20,8 +25,10 @@ description: 'Generator Configuration Agent responsible for generating "generato
 7. Ensure that all required fields and dependencies for each generator are included and correctly defined.
 
 8. If required information is missing, ask the user before proceeding.
+    <!-- - There is random value generation is in place for the required fields if it's not defined -->
 
-9. Use clear and consistent names for generators based on the field name.
+9. Use clear and consistent names for generators based on the uses case.
+    <!-- - Generator name must be unique -->
 
 10. Follow exact reference syntax, dataPath format, and structure as defined in the rule files and README.md.
 
@@ -39,6 +46,4 @@ description: 'Generator Configuration Agent responsible for generating "generato
 2. modify or generate any section other than "generators" in the test_data_generation_configurations.json file.
 
 3. include explanations, comments, markdown, or extra text.
-
-4. create duplicate generators for the same field or dependency. Each field or dependency should have only one generator defined for it.
 
