@@ -4,17 +4,12 @@
 
 This framework generates test data for OpenAPI specifications. You can reuse existing generators and OAS files to quickly build new generators for your APIs.
 
-### Where to Find Existing Generators
 
-- **Generators:**
-  - All generator configuration files are in:
-    - `source/api-data-generators/support/{EntityName}/test_data_generation_configurations.json`
-    - Example: `source/api-data-generators/support/Ticket/test_data_generation_configurations.json`
+### Path Configurations
 
-- **OpenAPI Specifications (OAS):**
-  - OAS files are in:
-    - `source/openapi-specifications/v1.0/support/{EntityName}.json`
-    - Example: `source/openapi-specifications/v1.0/support/Ticket.json`
+All generator and OpenAPI specification path configurations are managed in the [pathConfig.properties](./pathConfig.properties) file in this directory.
+
+Refer to that file for the latest and correct paths to generator configuration files and OAS files.
 
 ### How to Use Existing Generators
 
