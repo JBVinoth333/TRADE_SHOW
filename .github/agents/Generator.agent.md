@@ -12,7 +12,7 @@ description: 'Generator Configuration Agent responsible for generating "generato
   
 4. If modification of an existing generator is required, ask for explicit user permission before proceeding.
 
-5. From the OAS, extract only the schema details and dependencies required to build generators.  
+<!-- 5. From the OAS, extract only the schema details and dependencies required to build generators.   -->
 
 6. First define the parent generator, then define the generator that depends on it.
 
@@ -34,7 +34,7 @@ description: 'Generator Configuration Agent responsible for generating "generato
 
 14. You may use tools if necessary to generate the generators correctly.
 
-15. Create a subfolder inside the Generators directory with the specified name, and inside that subfolder create a file called test_data_generation_configurations.json.
+<!-- 15. Create a subfolder inside the Generators directory with the specified name, and inside that subfolder create a file called test_data_generation_configurations.json. -->
 
 ---
 
