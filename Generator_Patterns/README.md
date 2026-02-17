@@ -35,13 +35,13 @@ Refer to that file for the latest and correct paths to generator configuration f
 
 ## Generator Types
 
-| Type | Purpose | When to Use |
-|------|---------|-------------|
-| [Dynamic](./dynamic.md) | Fetch IDs from APIs | Get actual system data |
-| [Remote](./remote.md) | Call system functions | Timestamps, enums, system values |
-| [Static](./static.md) | Fixed constant values | Predetermined values |
-| [Reference](./reference.md) | Use request data | Pass-through from incoming request |
-| [Conditional](./conditional.md) | Logic-based branching | Value depends on conditions |
+| Type                            | Purpose               | When to Use                        |
+| ------------------------------- | --------------------- | ---------------------------------- |
+| [Dynamic](./dynamic.md)         | Fetch IDs from APIs   | Get actual system data             |
+| [Remote](./remote.md)           | Call system functions | Timestamps, enums, system values   |
+| [Static](./static.md)           | Fixed constant values | Predetermined values               |
+| [Reference](./reference.md)     | Use request data      | Pass-through from incoming request |
+| [Conditional](./conditional.md) | Logic-based branching | Value depends on conditions        |
 
 ## Core Rules
 
@@ -61,19 +61,19 @@ Refer to that file for the latest and correct paths to generator configuration f
 
 ### 3. Generator Reference Format
 
-| Type | Format | Example |
-|------|--------|---------|
-| Same file | `#/generators/name` | `"agentId": "#/generators/agent_id"` |
-| Different file | `../Entity/file.json#/generators/name` | `"agentId": "../Agent/.../agent_id"` |
-| Array elements | Use `[*]` suffix | `"agentIds[*]": "#/generators/agent_id"` |
+| Type           | Format                                 | Example                                  |
+| -------------- | -------------------------------------- | ---------------------------------------- |
+| Same file      | `#/generators/name`                    | `"agentId": "#/generators/agent_id"`     |
+| Different file | `../Entity/file.json#/generators/name` | `"agentId": "../Agent/.../agent_id"`     |
+| Array elements | Use `[*]` suffix                       | `"agentIds[*]": "#/generators/agent_id"` |
 
 ### 4. Naming Patterns
 
-| Pattern | Example | Use Case |
-|---------|---------|----------|
-| Entity-Based | `agent_id`, `ticket_id` | Any ID from that entity |
-| Status-Based | `active_agent_id`, `open_ticket_id` | Specific status |
-| Operation-Based | `created_ticket_id`, `updated_contact_id` | Result of operation |
+| Pattern         | Example                                   | Use Case                |
+| --------------- | ----------------------------------------- | ----------------------- |
+| Entity-Based    | `agent_id`, `ticket_id`                   | Any ID from that entity |
+| Status-Based    | `active_agent_id`, `open_ticket_id`       | Specific status         |
+| Operation-Based | `created_ticket_id`, `updated_contact_id` | Result of operation     |
 
 ### 5. JSONPath Syntax
 
@@ -86,23 +86,7 @@ Common patterns:
 
 ## Important File Restrictions
 
-**NEVER edit the following files in existing entities:**
-- OpenAPI Specification (OAS) files
-- Generator files (test_data_generation_configurations.json)
-
 These files are controlled by system processes. Any edits must be done through proper configuration management.
-
-## Common Mistakes
-
-| Mistake | Wrong | Correct |
-|---------|-------|---------|
-| Missing array | `"agent_id": { ... }` | `"agent_id": [ { ... } ]` |
-| Forgetting `[*]` | `"agentIds": "#/generators/agent_id"` | `"agentIds[*]": "#/generators/agent_id"` |
-| Missing type | `{ "value": "OPEN" }` | `{ "type": "static", "value": "OPEN" }` |
-| Wrong path | `Agent/file.json` | `../Agent/file.json` |
-| Missing generators key | `{ "agent_id": [ ] }` | `{ "generators": { "agent_id": [ ] } }` |
-
-## Entity Relationships
 
 Common entity dependencies:
 
@@ -133,13 +117,13 @@ Reference generators from other entities:
 
 ### 2.10 Common Mistakes to Avoid
 
-| Error | Fix |
-|-------|-----|
-| `"agent_id": { ... }` | Use array: `[ { ... } ]` |
-| `"agentIds": ...` | Add `[*]`: `"agentIds[*]"` |
-| Including "apis" section | Remove - only generators |
+| Error                       | Fix                           |
+| --------------------------- | ----------------------------- |
+| `"agent_id": { ... }`       | Use array: `[ { ... } ]`      |
+| `"agentIds": ...`           | Add `[*]`: `"agentIds[*]"`    |
+| Including "apis" section    | Remove - only generators      |
 | Missing `../` in references | Use `../Agent/file.json#/...` |
-| Missing `type` property | Add type to every generator |
+| Missing `type` property     | Add type to every generator   |
 
 ## 3. Generator Types Quick Reference
 
@@ -247,8 +231,6 @@ Click the guide link for your generator type (Section 3). Find examples that mat
 
 ### Step 4: Create Your Generator File
 
-Create file at: `Generators/Real_Generators/MyEntity/test_data_generation_configurations.json`
-
 ```json
 {
   "generators": {
@@ -269,4 +251,4 @@ Create file at: `Generators/Real_Generators/MyEntity/test_data_generation_config
 - Clarity: Good names help understanding
 ---
 
-*Last Updated: 14 February 2026*
+*Last Updated: 17 February 2026*
