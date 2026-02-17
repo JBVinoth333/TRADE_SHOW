@@ -74,7 +74,8 @@ For "now" timestamps:
     "format": "yyyy-MM-dd'T'HH:mm:ss'Z'"
   }
 }
-```
+```pport.Department.getDepartments",
+                "dataPath": "$.response.body:$.data[*].id"
 
 ### Future Date
 For deadlines and expiry dates:
