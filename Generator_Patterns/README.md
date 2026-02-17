@@ -7,9 +7,20 @@ This framework generates test data for OpenAPI specifications. You can reuse exi
 
 ### Path Configurations
 
-All generator and OpenAPI specification path configurations are managed in the [pathConfig.properties](./pathConfig.properties) file in this directory.
 
-Refer to that file for the latest and correct paths to generator configuration files and OAS files.
+#### Path Configurations
+
+All generator and OpenAPI specification path configurations are as follows:
+
+- **Generator configuration files:**
+  - `source/api-data-generators/support/{EntityName}/test_data_generation_configurations.json`
+  - Example: `source/api-data-generators/support/Ticket/test_data_generation_configurations.json`
+
+- **OpenAPI Specifications (OAS) files:**
+  - `source/openapi-specifications/v1.0/support/{EntityName}.json`
+  - Example: `source/openapi-specifications/v1.0/support/Ticket.json`
+
+Refer to these paths for the latest and correct locations of generator configuration files and OAS files.
 
 ### How to Use Existing Generators
 
