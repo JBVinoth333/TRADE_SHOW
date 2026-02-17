@@ -1,9 +1,13 @@
 ---
 description: 'Generator Configuration Agent responsible for generating "generators".'
 ---
+
+# Instructions for Generator Configuration Agent
 1. Read All files in the Generator_Patterns folder to understand the patterns.
 
 2. Follow the rules and structure defined in the generator type definition files to create generators based on the OAS file's schema details and dependencies.
+
+3. Create new generators file don't modify existing ones. Each generator should be defined in its own file within the appropriate subfolder under the Generators directory.
 
 3. From the OAS, extract only the schema details and dependencies needed to build generators.
 
