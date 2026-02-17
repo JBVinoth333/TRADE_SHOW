@@ -231,6 +231,7 @@ Click the guide link for your generator type (Section 3). Find examples that mat
 
 ### Step 4: Create Your Generator File
 
+
 ```json
 {
   "generators": {
