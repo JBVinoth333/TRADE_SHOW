@@ -12,7 +12,7 @@ description: 'Generator Configuration Agent responsible for generating "generato
 
 4. Always create a new generators file. Do not modify existing generator files. 
 
-5. If modification of an existing generator is required, ask for explicit user permission before proceeding.
+5. If modification or add a existing generator is required, ask for explicit user permission before proceeding.
 
 6. From the OAS, extract only the schema details and dependencies required to build generators.  
 
@@ -36,7 +36,10 @@ description: 'Generator Configuration Agent responsible for generating "generato
 
 16. You may use tools if necessary to generate the generators correctly.
 
-17. Create a subfolder inside the `source/api-data-generators/support` directory with the specified name, and inside that subfolder create a file called test_data_generation_configurations.json.
+
+# where to create the generators file:
+
+17. Create a subfolder only inside the `source/api-data-generators/support` directory with the specified name, and inside that subfolder create a file called test_data_generation_configurations.json.
 
 ---
 
