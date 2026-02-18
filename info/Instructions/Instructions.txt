@@ -402,3 +402,28 @@ Workflow Steps
 9. Commit to repository
 
 Last Updated: 12 February 2026
+
+======================
+Date: 18 February 2026
+======================
+Instructions:
+
+1. Generator Names should be in snake_case format, all lowercase with underscores and don't use special characters or spaces. For example: agent_id, active_agent_id, created_ticket_id.
+
+2. When params using in Dynamic generator,the parameters name should be same as the parameters defined in OpenAPI specification.
+
+3. If use previously defined generator, please make sure the reference path is correct and the generator exists. For same file reference use "#/generators/generator_name" and for different file reference use "../EntityName/test_data_generation_configurations.json#/generators/name".
+
+4. If use param input body, query, path or header, please make sure the reference path is correct and the field exists in the OpenAPI specification. For example: "$.input.body:$.ticketId" for request body, "$.input.query:$.status" for query parameter, "$.input.path:$.agentId" for path parameter, "$.input.header:$.Authorization" for header.
+
+5. Create separate folder while creating new Generator file for different entity, for example: Agent, Contact, Ticket etc. and the generator file name should be "test_data_generation_configurations.json".
+
+6. Don't edit OpenAPI specification files.
+
+7. If you need to edit exiting generator file, should be ask for permission and follow the instructions from the user who is responsible for the generator file.
+
+8. Don't use params in generator if API doesn't have that parameter defined in OpenAPI specification.
+
+9. Separate folder OAS and mention path config file.
+
+10. Create prompt structure.
