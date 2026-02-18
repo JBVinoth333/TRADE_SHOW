@@ -36,10 +36,14 @@ description: 'Generator Configuration Agent responsible for generating "generato
 
 16. You may use tools if necessary to generate the generators correctly.
 
+17. When using short-hand references like `$departments` or `$contacts`, ensure they reference generators defined in the same `test_data_generation_configurations.json` file unless the reference explicitly uses a relative cross-file path (for example `../Department/...`). This prevents accidental cross-file name collisions and keeps generated params local by default.
+
+18. Operation ID format: Always specify `generatorOperationId` using the `<service>.<Entity>.<operation>` pattern (for example: "generatorOperationId": "support.Agent.getAgents").
+
 
 # where to create the generators file:
 
-17. Create a subfolder only inside the `source/api-data-generators/support` directory with the specified name, and inside that subfolder create a file called test_data_generation_configurations.json.
+19. Create a subfolder only inside the `source/api-data-generators/support` directory with the specified name, and inside that subfolder create a file called test_data_generation_configurations.json.
 
 ---
 
