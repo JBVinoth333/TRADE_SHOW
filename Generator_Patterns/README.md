@@ -4,9 +4,7 @@
 
 This framework generates test data for OpenAPI specifications. You can reuse existing generators and OAS files to quickly build new generators for your APIs.
 
-
 ### Path Configurations
-
 
 #### Path Configurations
 
