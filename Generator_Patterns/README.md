@@ -6,22 +6,26 @@ This project is a framework for generating test data for OpenAPI specifications.
 
 ## Table of Contents
 
-- [Description](#description)
-- [Usage](#usage)
-- [Features](#features)
-- [Generator Types](#generator-types)
-- [Reference](#reference)
+- [Data Generation Framework](#data-generation-framework)
+  - [Description](#description)
+  - [Table of Contents](#table-of-contents)
+  - [Usage](#usage)
+    - [Path Configurations](#path-configurations)
+    - [Basic Generator Structure](#basic-generator-structure)
+  - [Features](#features)
+  - [Generator Types](#generator-types)
+    - [JSONPath Syntax](#jsonpath-syntax)
 
 ## Usage
 
 ### Path Configurations
 
  **Generator configuration files:**
-   See `PathCofig.properties` → `GENERATOR_CONFIG_PATH`
-   Example: Replace `{EntityName}` with your entity, e.g., `Ticket`
+   See `PathConfig.properties` → `GENERATOR_CONFIG_PATH`
+   Example: Replace `EntityName` with your entity, e.g., `Ticket`
  **OpenAPI Specifications (OAS) files:**
-   See `PathCofig.properties` → `OAS_FILE_PATH`
-   Example: Replace `{EntityName}` with your entity, e.g., `Ticket`
+   See `PathConfig.properties` → `OAS_FILE_PATH`
+   Example: Replace `EntityName` with your entity, e.g., `Ticket`
 
 Refer to these paths for the latest and correct locations of generator configuration files and OAS files.
 
@@ -52,14 +56,6 @@ Refer to these paths for the latest and correct locations of generator configura
 | [Reference](./reference.md)     | Use request data      | Pass-through from incoming request |
 | [Conditional](./conditional.md) | Logic-based branching | Value depends on conditions        |
 
-### Naming Patterns
-
-| Pattern         | Example                                   | Use Case                |
-| --------------- | ----------------------------------------- | ----------------------- |
-| Entity-Based    | `agent_id`, `ticket_id`                   | Any ID from that entity |
-| Status-Based    | `active_agent_id`, `open_ticket_id`       | Specific status         |
-| Operation-Based | `created_ticket_id`, `updated_contact_id` | Result of operation     |
-
 ### JSONPath Syntax
 
 Format: `$.location:$.path`
@@ -70,13 +66,4 @@ Common patterns:
 - `$.manager.id` - Nested field
 - `$.users[?(@.active == true)].id` - Filtered results
 
-### Cross-File References
-
-Reference generators from other entities:
-
-```json
-"assigned_agent_id": [
-  { "ref": "../Agent/test_data_generation_configurations.json#/generators/agent_id" }
-]
-```
 *Last Updated: 18 February 2026**ss*

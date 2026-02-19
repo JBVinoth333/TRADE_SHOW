@@ -18,7 +18,7 @@ Responsible for building generators that follow strict rules and guidelines base
 
 4. Always create a new generator file instead of modifying existing ones. If you need to modify or add to an existing generator, request explicit user permission before proceeding.
 
-5. Refer to the PathCofig.properties file to find the paths for OAS files and existing generator files. Always use these paths when reading or referencing OAS or generator files.
+5. Refer to the `PathConfig.properties` file to find the paths for OAS files and existing generator files. Always use these paths when reading or referencing OAS or generator files.
 
 6.  Extract only the necessary schema details and dependencies from the OAS file to build generators. Do not include unnecessary information or fields that are not required for generator creation.
 
@@ -38,22 +38,39 @@ Responsible for building generators that follow strict rules and guidelines base
 
 4. Choose the correct generator type strictly according to its definition file.
 
-5.  Ensure all references point to valid and existing generators.
+5.  For the "name" field inside a generator, use the entity name from PathConfig in snake_case: plural for lists, singular for single items (e.g., "departments", "contact", "tickets").
 
-6.  For the "name" field inside a generator, use the entity name from PathConfig in snake_case: plural for lists, singular for single items (e.g., "departments", "contact", "tickets").
+6.  Follow exact reference syntax, dataPath format, and structural rules as defined in the type definition files and README.md.
 
-7.  Follow exact reference syntax, dataPath format, and structural rules as defined in the type definition files and README.md.
+7.  Output must contain only the "generators" JSON object.
 
-8.  Output must contain only the "generators" JSON object.
+8.  When using short-hand references like `$departments` or `$contacts`, ensure they reference generators defined in the same `test_data_generation_configurations.json` file unless the reference explicitly uses a relative cross-file path (for example `../Department/...`). This prevents accidental cross-file name collisions and keeps generated params local by default.
 
-9.  When using short-hand references like `$departments` or `$contacts`, ensure they reference generators defined in the same `test_data_generation_configurations.json` file unless the reference explicitly uses a relative cross-file path (for example `../Department/...`). This prevents accidental cross-file name collisions and keeps generated params local by default.
+9. Operation ID format: Always specify `generatorOperationId` using the `<service>.<Entity>.<operation>` pattern (for example: "generatorOperationId": "support.Agent.getAgents").
 
-10. Operation ID format: Always specify `generatorOperationId` using the `<service>.<Entity>.<operation>` pattern (for example: "generatorOperationId": "support.Agent.getAgents").
+10. When params are used in a dynamic generator, the parameter names should be the same as those defined in the OpenAPI specification.
 
-11. When params are used in a dynamic generator, the parameter names should be the same as those defined in the OpenAPI specification.
+11. If you use param input from body, query, path or header, please make sure the reference path is correct and the field exists in the OpenAPI specification. For example: "$.input.body:$.ticketId" for request body, "$.input.query:$.status" for query parameter, "$.input.path:$.agentId" for path parameter, "$.input.header:$.Authorization" for header.
 
-12. If you use param input from body, query, path or header, please make sure the reference path is correct and the field exists in the OpenAPI specification. For example: "$.input.body:$.ticketId" for request body, "$.input.query:$.status" for query parameter, "$.input.path:$.agentId" for path parameter, "$.input.header:$.Authorization" for header.
+---
 
+## Generator Structure Rule
+
+All generators must be created using the following structure:
+
+```json
+{
+    "generators": {
+        "<generator_name>": [
+          {}
+        ]
+    }
+}
+```
+
+- All dependencies for a generator must be included in the same array under the generator name.
+- This ensures clarity, maintainability, and proper grouping of related generator steps.
+- Generator name should be descriptive of the entity and purpose, following the snake_case convention.
 ---
 
 ## Generator Creation Rules
@@ -76,4 +93,6 @@ Responsible for building generators that follow strict rules and guidelines base
 
 5.  Don't use params in a generator if the API doesn't have that parameter defined in the OpenAPI specification.
 
----
+6. Don't ask permission for read access to OAS or generator files, as you have full access to read any file in the specified paths.You have permission to read files outside of the workspace.
+
+7. Don't give text response in chat window.Only output the generator JSON object as specified.
