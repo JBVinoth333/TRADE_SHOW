@@ -6,8 +6,10 @@ description: Creates generators using the OpenAPI specification and defined gene
 ## Role
 Responsible for building generators that follow strict rules and guidelines based on OpenAPI and specified patterns.
 
+---
 
 ## What to do
+
 1. Read all generator type definitions in the Generator_Patterns folder to understand their rules and structures, then use them to create generators based on the OAS file’s schema and dependencies.
 
 2.  Analyze the user prompt to identify all dependencies needed for generator creation. For example, if the prompt is "Create Ticket dependency Department and Contact," determine which values (such as Department ID and Contact ID) are required to create a Ticket.
@@ -24,7 +26,10 @@ Responsible for building generators that follow strict rules and guidelines base
 
 8.  You may use tools if necessary to generate the generators correctly.
 
+---
+
 ## Generator
+
 1. Generator names must use snake_case (all lowercase, underscores), be clear, consistent, and meaningful, matching the entity and purpose. Use singular for single values (e.g., ticket_id), plural for lists (e.g., ticket_ids). All generator names must be unique and kept short and meaningful.
 
 2. Maintain order in generator creation based on dependencies. For example, if Generator A depends on Generator B, ensure that Generator B is created before Generator A.
@@ -49,14 +54,13 @@ Responsible for building generators that follow strict rules and guidelines base
 
 12. If you use param input from body, query, path or header, please make sure the reference path is correct and the field exists in the OpenAPI specification. For example: "$.input.body:$.ticketId" for request body, "$.input.query:$.status" for query parameter, "$.input.path:$.agentId" for path parameter, "$.input.header:$.Authorization" for header.
 
+---
+
 ## Generator Creation Rules
-1. Create a separate folder while creating a new generator file for different entities, for example: Agent, Contact, Ticket etc. The generator file name should be "test_data_generation_configurations.json".
+
+1. When creating a new generator file for different entities (e.g., Agent, Contact, Ticket), always create a separate subfolder with the specified name inside the Created_Generators directory. Inside that subfolder, create a file named test_data_generation_configurations.json.
 
 2. Always create a new generator file instead of modifying existing ones. If you need to edit or add to an existing generator file, request explicit permission and follow the instructions from the user responsible for that file.
-
-
-## where to create the generators file:
-1. Create a subfolder only inside the `source/api-data-generators/support` directory with the specified name, and inside that subfolder create a file called test_data_generation_configurations.json.
 
 ---
 
@@ -71,3 +75,5 @@ Responsible for building generators that follow strict rules and guidelines base
 4. Don't edit OpenAPI specification files.
 
 5.  Don't use params in a generator if the API doesn't have that parameter defined in the OpenAPI specification.
+
+---
