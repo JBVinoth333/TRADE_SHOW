@@ -54,6 +54,25 @@ Responsible for building generators that follow strict rules and guidelines base
 
 ---
 
+## Generator Structure Rule
+
+All generators must be created using the following structure:
+
+```json
+{
+    "generators": {
+        "<generator_name>": [
+          {}
+        ]
+    }
+}
+```
+
+- All dependencies for a generator must be included in the same array under the generator name.
+- This ensures clarity, maintainability, and proper grouping of related generator steps.
+- Generator name should be descriptive of the entity and purpose, following the snake_case convention.
+---
+
 ## Generator Creation Rules
 
 1. When creating a new generator file for different entities (e.g., Agent, Contact, Ticket), always create a separate subfolder with the specified name inside the Created_Generators directory. Inside that subfolder, create a file named test_data_generation_configurations.json.
@@ -74,7 +93,6 @@ Responsible for building generators that follow strict rules and guidelines base
 
 5.  Don't use params in a generator if the API doesn't have that parameter defined in the OpenAPI specification.
 
-6. Don't ask permission for read access to OAS or generator files, as you have full access to read any file in the specified paths.
+6. Don't ask permission for read access to OAS or generator files, as you have full access to read any file in the specified paths.You have permission to read files outside of the workspace.
 
-7. Don't give text response in chat window.Only output the generator JSON object as specified. 
----
+7. Don't give text response in chat window.Only output the generator JSON object as specified.
