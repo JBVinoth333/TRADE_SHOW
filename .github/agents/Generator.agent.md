@@ -40,10 +40,26 @@ description: 'Generator Configuration Agent responsible for generating "generato
 
 18. Operation ID format: Always specify `generatorOperationId` using the `<service>.<Entity>.<operation>` pattern (for example: "generatorOperationId": "support.Agent.getAgents").
 
+19. Generator names should be in snake_case format, all lowercase with underscores and don't use special characters or spaces. For example: agent_id, active_agent_id, created_ticket_id.
 
-# where to create the generators file:
+20. When params are used in a dynamic generator, the parameter names should be the same as those defined in the OpenAPI specification.
 
-19. Create a subfolder only inside the `source/api-data-generators/support` directory with the specified name, and inside that subfolder create a file called test_data_generation_configurations.json.
+21. If you use a previously defined generator, please make sure the reference path is correct and the generator exists. For same file reference use "#/generators/generator_name" and for different file reference use "../EntityName/test_data_generation_configurations.json#/generators/name".
+
+22. If you use param input from body, query, path or header, please make sure the reference path is correct and the field exists in the OpenAPI specification. For example: "$.input.body:$.ticketId" for request body, "$.input.query:$.status" for query parameter, "$.input.path:$.agentId" for path parameter, "$.input.header:$.Authorization" for header.
+
+23. Create a separate folder while creating a new generator file for different entities, for example: Agent, Contact, Ticket etc. The generator file name should be "test_data_generation_configurations.json".
+
+24. Don't edit OpenAPI specification files.
+
+25. If you need to edit an existing generator file, you should ask for permission and follow the instructions from the user who is responsible for the generator file.
+
+26. Don't use params in a generator if the API doesn't have that parameter defined in the OpenAPI specification.
+
+
+## where to create the generators file:
+
+1. Create a subfolder only inside the `source/api-data-generators/support` directory with the specified name, and inside that subfolder create a file called test_data_generation_configurations.json.
 
 ---
 

@@ -1,4 +1,0 @@
-my use:
-
-
-From the OAS, extract only the schema details and dependencies needed to build generators.
