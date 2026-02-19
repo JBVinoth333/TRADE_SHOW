@@ -103,3 +103,23 @@ i think these type of examples may be unnecessary.Try to avoid unwanted things.T
 
 1.This path is wrong,because we can't access directly the support folder.So, fix and update the md files.
 ================================================================
+
+
+19/02/2026
+
+1)1.When a generator has dependencies, put all required steps as objects in a single array under one generator key. Order the array so dependencies come first.
+2.The GeneratorGroup object defines a set of data generation configurations. These groups are only effective when referenced by APIs or test cases.
+merge these rules.
+
+2)Make for this paragraph:
+Understand the given prompt ,If user give prompt like "Create Ticket dependency Department and Contact"
+Think if create Ticket work what are all the dependency if Department and Contact are Ticket's dependeny then think which value need to create Ticket.Example) Create Ticket API need Department ID and Contact ID so, the Depratment and Contact generator datapath must be extract the departmentid and contactid in the api response.So, the Created Generator will efficently and clear.
+
+3)Analyze the user prompt to identify all dependencies needed for generator creation. For example, if the prompt is "Create Ticket dependency Department and Contact," determine which values (such as Department ID and Contact ID) are required to create a Ticket.
+3. Ensure that the generators for each dependency (e.g., Department, Contact) extract the necessary values from their API responses, so the main generator (e.g., Ticket) can use them efficiently and clearly.
+
+change the example in real generator's example read the generator files and change it.Generator files path have pathCOnfig.properties file so reach the folder and read file
+
+4)Always create a new generators file. Do not modify existing generator files.
+2.. If modification or add a existing generator is required, ask for explicit user permission before proceeding.
+merge these and convert into Agent instruction
