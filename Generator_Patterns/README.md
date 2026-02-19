@@ -16,12 +16,12 @@ This project is a framework for generating test data for OpenAPI specifications.
 
 ### Path Configurations
 
-- **Generator configuration files:**
-  - `source/api-data-generators/support/{EntityName}/test_data_generation_configurations.json`
-  - Example: `source/api-data-generators/support/Ticket/test_data_generation_configurations.json`
-- **OpenAPI Specifications (OAS) files:**
-  - `source/openapi-specifications/v1.0/support/{EntityName}.json`
-  - Example: `source/openapi-specifications/v1.0/support/Ticket.json`
+ **Generator configuration files:**
+   See `PathCofig.properties` → `GENERATOR_CONFIG_PATH`
+   Example: Replace `{EntityName}` with your entity, e.g., `Ticket`
+ **OpenAPI Specifications (OAS) files:**
+   See `PathCofig.properties` → `OAS_FILE_PATH`
+   Example: Replace `{EntityName}` with your entity, e.g., `Ticket`
 
 Refer to these paths for the latest and correct locations of generator configuration files and OAS files.
 
