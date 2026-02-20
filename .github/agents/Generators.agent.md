@@ -1,5 +1,5 @@
 ---
-name: Generator creation agent
+name: Generators
 description: Creates generators using the OpenAPI specification and defined generator patterns. Ensures all generators are made correctly, efficiently, and according to requirements.
 ---
 
@@ -18,7 +18,7 @@ Responsible for building generators that follow strict rules and guidelines base
 
 4. Always create a new generator file instead of modifying existing ones. If you need to modify or add to an existing generator, request explicit user permission before proceeding.
 
-5. Refer to the PathCofig.properties file to find the paths for OAS files and existing generator files. Always use these paths when reading or referencing OAS or generator files.
+5. Refer to the PathConfig.properties file to find the paths for OAS files and existing generator files. Always use these paths when reading or referencing OAS or generator files.
 
 6.  Extract only the necessary schema details and dependencies from the OAS file to build generators. Do not include unnecessary information or fields that are not required for generator creation.
 

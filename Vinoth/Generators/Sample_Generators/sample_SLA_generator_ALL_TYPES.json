@@ -1,0 +1,48 @@
+{
+    "generators": {
+        "sla_id": [
+            {
+                "type": "dynamic",
+                "generatorOperationId": "support.SLA.getSLAs",
+                "dataPath": "$.response.body:$.data[*].id"
+            }
+        ],
+        "sla_name": [
+            {
+                "type": "static",
+                "value": "Standard SLA"
+            }
+        ],
+        "sla_priority": [
+            {
+                "type": "remote",
+                "generatorMethod": "applicationDriver.rpc.desk.DynamicDataProvider.getDynamicEnumValues",
+                "inputs": {
+                    "fieldName": "priority",
+                    "moduleName": "SLA",
+                    "orgId": "$.input.query:$.orgId"
+                }
+            }
+        ],
+        "sla_ticket_id": [
+            {
+                "type": "reference",
+                "ref": "$.input.body:$.ticketId"
+            }
+        ],
+        "sla_is_active": [
+            {
+                "type": "conditional",
+                "condition": "priority == 'HIGH'",
+                "then": {
+                    "type": "static",
+                    "value": true
+                },
+                "else": {
+                    "type": "static",
+                    "value": false
+                }
+            }
+        ]
+    }
+}
