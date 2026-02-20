@@ -1,0 +1,21 @@
+{
+    "generators": {
+        "product": [
+            {
+                "type": "dynamic",
+                "generatorOperationId": "portal.Product.addProduct",
+                "dataPath": "$.response.body:$.id"
+            }
+        ],
+        "orderProduct": [
+            {
+                "type": "dynamic",
+                "generatorOperationId": "portal.Order.orderProduct",
+                "dependencies": [
+                    "product"
+                ],
+                "dataPath": "$.response.body:$.orderId"
+            }
+        ]
+    }
+}

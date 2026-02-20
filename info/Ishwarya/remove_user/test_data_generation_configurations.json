@@ -1,0 +1,145 @@
+{
+    "generators": {
+        "user_id_1": [
+            {
+                "type": "dynamic",
+                "generatorOperationId": "support.User.createUser",
+                "params": {
+                    "email": "user1@example.com",
+                    "name": "User One",
+                    "username": "user_one"
+                },
+                "dataPath": "$.response.body:$.id"
+            }
+        ],
+        "user_id_2": [
+            {
+                "type": "dynamic",
+                "generatorOperationId": "support.User.createUser",
+                "params": {
+                    "email": "user2@example.com",
+                    "name": "User Two",
+                    "username": "user_two"
+                },
+                "dataPath": "$.response.body:$.id"
+            }
+        ],
+        "user_id_3": [
+            {
+                "type": "dynamic",
+                "generatorOperationId": "support.User.createUser",
+                "params": {
+                    "email": "user3@example.com",
+                    "name": "User Three",
+                    "username": "user_three"
+                },
+                "dataPath": "$.response.body:$.id"
+            }
+        ],
+        "user_id_4": [
+            {
+                "type": "dynamic",
+                "generatorOperationId": "support.User.createUser",
+                "params": {
+                    "email": "user4@example.com",
+                    "name": "User Four",
+                    "username": "user_four"
+                },
+                "dataPath": "$.response.body:$.id"
+            }
+        ],
+        "user_id_5": [
+            {
+                "type": "dynamic",
+                "generatorOperationId": "support.User.createUser",
+                "params": {
+                    "email": "user5@example.com",
+                    "name": "User Five",
+                    "username": "user_five"
+                },
+                "dataPath": "$.response.body:$.id"
+            }
+        ],
+        "user_id_6": [
+            {
+                "type": "dynamic",
+                "generatorOperationId": "support.User.createUser",
+                "params": {
+                    "email": "user6@example.com",
+                    "name": "User Six",
+                    "username": "user_six"
+                },
+                "dataPath": "$.response.body:$.id"
+            }
+        ],
+        "user_id_7": [
+            {
+                "type": "dynamic",
+                "generatorOperationId": "support.User.createUser",
+                "params": {
+                    "email": "user7@example.com",
+                    "name": "User Seven",
+                    "username": "user_seven"
+                },
+                "dataPath": "$.response.body:$.id"
+            }
+        ],
+        "user_id_8": [
+            {
+                "type": "dynamic",
+                "generatorOperationId": "support.User.createUser",
+                "params": {
+                    "email": "user8@example.com",
+                    "name": "User Eight",
+                    "username": "user_eight"
+                },
+                "dataPath": "$.response.body:$.id"
+            }
+        ],
+        "user_id_9": [
+            {
+                "type": "dynamic",
+                "generatorOperationId": "support.User.createUser",
+                "params": {
+                    "email": "user9@example.com",
+                    "name": "User Nine",
+                    "username": "user_nine"
+                },
+                "dataPath": "$.response.body:$.id"
+            }
+        ],
+        "user_id_10": [
+            {
+                "type": "dynamic",
+                "generatorOperationId": "support.User.createUser",
+                "params": {
+                    "email": "user10@example.com",
+                    "name": "User Ten",
+                    "username": "user_ten"
+                },
+                "dataPath": "$.response.body:$.id"
+            }
+        ],
+        "remove_users": [
+            {
+                "type": "dynamic",
+                "generatorOperationId": "support.User.deleteUsers",
+                "params": {
+                    "userIds": [
+                        "{{user_id_1}}",
+                        "{{user_id_2}}",
+                        "{{user_id_3}}",
+                        "{{user_id_4}}",
+                        "{{user_id_5}}",
+                        "{{user_id_6}}",
+                        "{{user_id_7}}",
+                        "{{user_id_8}}",
+                        "{{user_id_9}}",
+                        "{{user_id_10}}"
+                    ]
+                },
+                "dataPath": "$.response.statusCode"
+            }
+        ]
+    }
+}
