@@ -123,3 +123,9 @@ change the example in real generator's example read the generator files and chan
 4)Always create a new generators file. Do not modify existing generator files.
 2.. If modification or add a existing generator is required, ask for explicit user permission before proceeding.
 merge these and convert into Agent instruction
+
+5) .value rule add pannu
+
+
+165 x 12
+20th line ulla create Ticket generatorkku dependency department datapathla idyo illa single entityla entha value irundhalum createticket generator paramsal generatorname.value nu kekanum

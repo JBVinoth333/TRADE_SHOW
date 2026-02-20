@@ -1,4 +1,31 @@
-# DYNAMIC Generator - Fetch from API Responses
+
+# Rule: Referencing Single-Entity Dynamic Generator Dependencies
+
+When a dynamic generator is used as a dependency for another generator (e.g., createTicket), always reference the dependency in params as $<generatorname>.value, regardless of the dataPath used in the dependency generator. This ensures the correct value is passed even if the dataPath returns an array or a single value.
+
+**Example:**
+
+Dependency generator:
+```json
+{
+  "type": "dynamic",
+  "name": "departments",
+  "generatorOperationId": "support.Department.getDepartments",
+  "dataPath": "$.response.body:$.data[*].id"
+}
+```
+
+Dependent generator:
+```json
+{
+  "type": "dynamic",
+  "name": "ticket",
+  "generatorOperationId": "support.Ticket.createTicket",
+  "params": {
+    "departmentId": "$departments.value"
+  }
+}
+```
 
 ## What It Does
 A DYNAMIC Generator fetches data from real API responses.
