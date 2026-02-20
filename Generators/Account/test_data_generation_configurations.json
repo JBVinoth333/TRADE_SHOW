@@ -1,0 +1,67 @@
+{
+    "generators": {
+        "account_id": [
+            {
+                "type": "dynamic",
+                "generatorOperationId": "support.Account.createAccount",
+                "dataPath": "$.response.body:$.id",
+                "name": "accounts"
+            }
+        ],
+        "account_custom_view_id": [
+            {
+                "type": "dynamic",
+                "generatorOperationId": "support.CustomView.getViews",
+                "dataPath": "$.response.body:$.data[*].id",
+                "params": {
+                    "module": "accounts"
+                }
+            }
+        ],
+        "account_associate_contact_ids": [
+            {
+                "type": "dynamic",
+                "generatorOperationId": "support.Account.associateContactsWithAccount",
+                "dataPath": "$.response.body:$.results[?(@.success == true)].id",
+                "params": {
+                    "accountId": "$accounts.response.body:$.id"
+                }
+            }
+        ],
+        "account_cf": [
+            {
+                "type": "remote",
+                "generatorMethod": "applicationDriver.rpc.desk.DynamicDataProvider.getCustomFieldSchema",
+                "inputs": {
+                    "moduleName": "Account"
+                }
+            }
+        ],
+        "merge_account_source_id": [
+            {
+                "type": "reference",
+                "ref": "$.input.body:$.ids[0]"
+            }
+        ],
+        "time_range": [
+            {
+                "type": "remote",
+                "generatorMethod": "applicationDriver.rpc.desk.DynamicDataProvider.generateDateTimeRange",
+                "inputs": {
+                    "timeLine": "current"
+                }
+            }
+        ],
+        "update_many_field_name": [
+            {
+                "type": "remote",
+                "generatorMethod": "applicationDriver.rpc.desk.DynamicDataProvider.getDynamicEnumValues",
+                "inputs": {
+                    "fieldName": "fieldName",
+                    "moduleName": "Account",
+                    "orgId": "$.input.query:$.orgId"
+                }
+            }
+        ]
+    }
+}
