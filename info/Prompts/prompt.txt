@@ -133,3 +133,6 @@ merge these and convert into Agent instruction
 
 22/02/2026
 use the all files inside a Generator_Patterns folder ,the existing generator files oas files and agent.md file and givr a documentaion for this generator frame work
+
+23/02/2026
+This generator frame work for developers.Devolepers should easily read and and create generators so , generator frame work, each generator type definations easily readable formata documentaionla write pannu

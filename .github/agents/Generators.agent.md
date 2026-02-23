@@ -12,9 +12,9 @@ Responsible for building generators that follow strict rules and guidelines base
 
 1. Read all generator type definitions in the Generator_Patterns folder to understand their rules and structures, then use them to create generators based on the OAS file’s schema and dependencies.
 
-2.  Analyze the user prompt to identify all dependencies needed for generator creation. For example, if the prompt is "Create Ticket dependency Department and Contact," determine which values (such as Department ID and Contact ID) are required to create a Ticket.
+2. Analyze the user prompt to identify all dependencies needed for generator creation. Determine which values from dependent operations are required by the target operation.
 
-3. Ensure that the generators for each dependency (e.g., Department, Contact) extract the necessary values from their API responses, so the main generator (e.g., Ticket) can use them efficiently and clearly.
+3. Ensure that dependency generators extract the required values from their API responses so downstream generators can consume them clearly and correctly.
 
 4. Always create a new generator file instead of modifying existing ones. If you need to modify or add to an existing generator, request explicit user permission before proceeding.
 
@@ -30,17 +30,17 @@ Responsible for building generators that follow strict rules and guidelines base
 
 ## Generator
 
-1. Generator names must use snake_case (all lowercase, underscores), be clear, consistent, and meaningful, matching the entity and purpose. Use singular for single values (e.g., ticket_id), plural for lists (e.g., ticket_ids). All generator names must be unique and kept short and meaningful.
+1. Generator names must use snake_case (all lowercase, underscores), be clear, consistent, and meaningful, matching the resource and purpose. Use singular for single values (e.g., entity_id), plural for lists (e.g., entity_ids). All generator names must be unique and kept short and meaningful.
 
-2. Maintain order in generator creation based on dependencies. For example, if Generator A depends on Generator B, ensure that Generator B is created before Generator A.
+2. Maintain order in generator creation based on dependencies. If Generator A depends on Generator B, ensure that Generator B is created before Generator A.
 
-3. Ensure that all generators strictly follow  the definitions and rules specified in the generator type definition files.
+3. Ensure that all generators strictly follow the definitions and rules specified in the generator type definition files.
 
 4. Choose the correct generator type strictly according to its definition file.
 
-5.  For the "name" field inside a generator, use the entity name from PathConfig in snake_case: plural for lists, singular for single items (e.g., "departments", "contact", "tickets").
+5. For the "name" field inside a generator, use the resource name from PathConfig in snake_case: plural for lists, singular for single items (e.g., "resources", "resource", "records").
 
-6.  Follow exact reference syntax, dataPath format, and structural rules as defined in the type definition files and README.md.
+6. Follow exact reference syntax, dataPath format, and structural rules as defined in the type definition files and README.md.
 
 7.  Output must contain only the "generators" JSON object.
 
@@ -75,7 +75,7 @@ All generators must be created using the following structure:
 
 ## Generator Creation Rules
 
-1. When creating a new generator file for different entities (e.g., Agent, Contact, Ticket), always create a separate subfolder with the specified name inside the Created_Generators directory. Inside that subfolder, create a file named test_data_generation_configurations.json.
+1. When creating a new generator file for different resources, always create a separate subfolder with the specified name inside the Created_Generators directory. Inside that subfolder, create a file named test_data_generation_configurations.json.
 
 2. Always create a new generator file instead of modifying existing ones. If you need to edit or add to an existing generator file, request explicit permission and follow the instructions from the user responsible for that file.
 
