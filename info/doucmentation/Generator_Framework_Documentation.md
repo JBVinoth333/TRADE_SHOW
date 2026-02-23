@@ -3,8 +3,8 @@
 ## 1) Purpose
 
 This framework generates API test data from OpenAPI definitions by combining:
-- OpenAPI specs in `source/openapi-specifications/v1.0/*`
-- generator configs in `source/api-data-generators/*`
+- OpenAPI specs for support and portal services
+- generator configs used by existing entities
 - generator pattern rules in `Generator_Patterns/*`
 - creation rules in `.github/agents/Generators.agent.md`
 
@@ -14,48 +14,49 @@ It supports two practical outputs:
 
 ---
 
-## 2) Repository Layout (Framework-Relevant)
+## 2) Actual Framework Data (No Path Mapping)
 
-### Rule and pattern sources
-- `Generator_Patterns/README.md`
-- `Generator_Patterns/Static.md`
-- `Generator_Patterns/Dynamic.md`
-- `Generator_Patterns/Reference.md`
-- `Generator_Patterns/Remote.md`
-- `Generator_Patterns/Conditional.md`
-- `Generator_Patterns/PathConfig.properties`
+The framework currently contains:
 
-### Agent behavior contract
-- `.github/agents/Generators.agent.md`
+- **Support OAS modules:** 387
+- **Portal OAS modules:** 55
+- **Support generator config sets:** 284
+- **Portal generator config sets:** 41
+- **Scenario generator sets:** 6
 
-### Runtime generator inventories (existing)
-- `source/api-data-generators/support/*/test_data_generation_configurations.json`
-- `source/api-data-generators/portal/*/test_data_generation_configurations.json`
+Commonly used entities in generator chains:
+- Ticket
+- Department
+- Contact
+- Agent
+- Product
 
-### OpenAPI source-of-truth
-- `source/openapi-specifications/v1.0/support/*.json`
-- `source/openapi-specifications/v1.0/portal/*.json`
-- `source/openapi-specifications/v1.0/common/Common.json`
-
-### Scenario/sample generators
-- `Created_Generators/*/test_data_generation_configurations.json`
-- `info/Ishwarya/*/test_data_generation_configurations.json`
-- `info/Vinoth/Generators/*/test_data_generation_configurations.json`
+Commonly used operation IDs in existing configs:
+- `support.Department.getDepartments`
+- `support.Contact.createContact`
+- `support.Ticket.createTicket`
+- `support.Ticket.mergeTicket`
+- `portal.Product.listAllProducts`
 
 ---
 
-## 3) Path Configuration
+## 3) Verified Runtime Facts (23 Feb 2026)
 
-Current configured paths from `Generator_Patterns/PathConfig.properties`:
+The documentation below is based on current files and counts in this repo:
 
-```properties
-GENERATOR_CONFIG_PATH=../source/api-data-generators/support/
-OAS_FILE_PATH=../source/openapi-specifications/v1.0/support/
-```
+- OpenAPI files for support services: **387**
+- OpenAPI files for portal services: **55**
+- Generator config files for support services: **284**
+- Generator config files for portal services: **41**
+- Scenario generator folders: **6**
+- Scenario generator files: **6**
 
-Notes:
-- The repository also contains `portal` generators and OAS files; these are actively used in `source/api-data-generators/portal` and `source/openapi-specifications/v1.0/portal`.
-- For support-entity generation, default to the configured `support` paths.
+Concrete data points validated from current content:
+
+- Ticket OpenAPI definitions include `operationId: "createTicket"`.
+- Multiple scenario files call `support.Ticket.createTicket` in `generatorOperationId`.
+- Existing runtime files use both local references (`#/generators/...`) and cross-file references (`../Entity/...#/generators/...`).
+- Response-code-specific parameter mapping is actively used (`200`, `204`, `422`) in `apis` sections.
 
 ---
 
@@ -63,10 +64,7 @@ Notes:
 
 ### 4.1 Full runtime model (`apis` + `generators`)
 
-Used in core inventories such as:
-- `source/api-data-generators/support/Ticket/test_data_generation_configurations.json`
-- `source/api-data-generators/support/Department/test_data_generation_configurations.json`
-- `source/api-data-generators/portal/Ticket/test_data_generation_configurations.json`
+Used across current support and portal generator definitions for runtime API parameter mapping.
 
 Typical structure:
 
@@ -94,6 +92,27 @@ Typical structure:
 Meaning:
 - `apis` maps **operation + status code + request parameter** to generator references.
 - `generators` defines how values are fetched/generated.
+
+Actual example from existing runtime style:
+
+```json
+{
+  "apis": {
+    "createTicket": {
+      "200": {
+        "departmentId": "../Department/test_data_generation_configurations.json#/generators/department_id",
+        "contactId": "../Contact/test_data_generation_configurations.json#/generators/contact_id",
+        "priority": "#/generators/ticket_priority"
+      },
+      "422": {
+        "departmentId": "../Department/test_data_generation_configurations.json#/generators/department_id",
+        "contactId": "../Contact/test_data_generation_configurations.json#/generators/contact_id",
+        "priority": "#/generators/ticket_priority"
+      }
+    }
+  }
+}
+```
 
 ### 4.2 Scenario chain model (`generators` only)
 
@@ -203,7 +222,7 @@ The required workflow (from agent rules + current file patterns):
 4. Use only OAS-defined fields in generator `params`.
 5. Map generated outputs either:
    - into scenario chain steps (`Created_Generators/*`), or
-   - into `apis` parameter bindings (`source/api-data-generators/*`).
+  - into `apis` parameter bindings for runtime operation/status mappings.
 
 Validation checkpoint:
 - Never invent parameters not defined by OAS.
@@ -239,7 +258,7 @@ Observed in `Created_Generators/MergeTicket/*` and `MergeThreeTickets/*`:
 - call `support.Ticket.mergeTicket` with `ticketId` + `ids`
 
 ### 9.3 Enum and timestamp generation
-Observed in `source/api-data-generators/portal/Ticket/*`:
+Observed in current Ticket generator definitions:
 - use `remote` + `getDynamicEnumValues`
 - use `remote` + `getCustomFieldSchema`
 
@@ -254,7 +273,6 @@ Observed across support/portal runtime configs:
 
 From `.github/agents/Generators.agent.md`:
 - read patterns first, then OAS, then build generators
-- respect `PathConfig.properties`
 - create new generator files for new work
 - output only generator JSON object during agent generation flow
 - avoid editing OAS files
@@ -331,8 +349,6 @@ Before finalizing any generator file:
 
 This documentation is derived from the current repository state across:
 - all files in `Generator_Patterns`
-- existing generator configs under `source/api-data-generators` and `Created_Generators`
-- OAS files in `source/openapi-specifications/v1.0`
+- existing generator configs and created scenario generators
+- current support and portal OpenAPI sets
 - `.github/agents/Generators.agent.md`
-
-If path config defaults change (for example, support vs portal), update `Generator_Patterns/PathConfig.properties` and this document together.
