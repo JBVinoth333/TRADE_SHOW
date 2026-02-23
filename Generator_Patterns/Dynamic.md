@@ -51,7 +51,7 @@ A DYNAMIC Generator fetches data from real API responses.
 | Property | Type | Purpose |
 |----------|------|---------|
 | `params` | object | Filter parameters: `{"status": "ACTIVE"}` |
-| `name` | string | Generator identifier |
+| `name` | string | Generator identifier (unique label for referencing in params) |
 
 ---
 
