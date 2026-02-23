@@ -51,14 +51,16 @@
         "any_ticket_id": [
             {
                 "type": "dynamic",
-                "generatorOperationId": "getTickets",
+                "name": "ticket",
+                "generatorOperationId": "support.Ticket.getTickets",
                 "dataPath": "$.response.body:$.data[0].id"
             }
         ],
         "open_ticket_id": [
             {
                 "type": "dynamic",
-                "generatorOperationId": "getTickets",
+                "name": "ticket",
+                "generatorOperationId": "support.Ticket.getTickets",
                 "dataPath": "$.response.body:$.data[*].id",
                 "params": {
                     "status": "OPEN"
@@ -79,7 +81,9 @@
         "ticket_priority": [
             {
                 "type": "static",
-                "value": 2
+                "value": [
+                    2
+                ]
             }
         ],
         "updated_timestamp": [
@@ -95,7 +99,9 @@
         "invalid_ticket_id": [
             {
                 "type": "static",
-                "value": 99999
+                "value": [
+                    99999
+                ]
             }
         ]
     }

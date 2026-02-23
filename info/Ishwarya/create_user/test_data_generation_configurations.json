@@ -33,14 +33,16 @@
         "any_user_id": [
             {
                 "type": "dynamic",
-                "generatorOperationId": "getUsers",
+                "name": "user",
+                "generatorOperationId": "support.User.getUsers",
                 "dataPath": "$.response.body:$.data[0].id"
             }
         ],
         "active_user_id": [
             {
                 "type": "dynamic",
-                "generatorOperationId": "getUsers",
+                "name": "user",
+                "generatorOperationId": "support.User.getUsers",
                 "dataPath": "$.response.body:$.data[*].id",
                 "params": {
                     "status": "ACTIVE"
@@ -50,7 +52,9 @@
         "user_status": [
             {
                 "type": "static",
-                "value": "ACTIVE"
+                "value": [
+                    "ACTIVE"
+                ]
             }
         ],
         "created_timestamp": [
@@ -66,7 +70,9 @@
         "invalid_user_id": [
             {
                 "type": "static",
-                "value": 99999
+                "value": [
+                    99999
+                ]
             }
         ],
         "path_param_user_id": [

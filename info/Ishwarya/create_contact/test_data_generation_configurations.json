@@ -105,6 +105,7 @@
         "any_contact_id": [
             {
                 "type": "dynamic",
+                "name": "contact",
                 "generatorOperationId": "support.Contact.getContacts",
                 "dataPath": "$.response.body:$.data[0].id"
             }
@@ -122,67 +123,89 @@
         "first_name": [
             {
                 "type": "static",
-                "value": "John"
+                "value": [
+                    "John"
+                ]
             }
         ],
         "last_name": [
             {
                 "type": "static",
-                "value": "Doe"
+                "value": [
+                    "Doe"
+                ]
             }
         ],
         "email_address": [
             {
                 "type": "static",
-                "value": "john.doe@example.com"
+                "value": [
+                    "john.doe@example.com"
+                ]
             }
         ],
         "phone_number": [
             {
                 "type": "static",
-                "value": "+1-555-123-4567"
+                "value": [
+                    "+1-555-123-4567"
+                ]
             }
         ],
         "mobile_number": [
             {
                 "type": "static",
-                "value": "+1-555-987-6543"
+                "value": [
+                    "+1-555-987-6543"
+                ]
             }
         ],
         "country_name": [
             {
                 "type": "static",
-                "value": "United States"
+                "value": [
+                    "United States"
+                ]
             }
         ],
         "zip_code": [
             {
                 "type": "static",
-                "value": "12345"
+                "value": [
+                    "12345"
+                ]
             }
         ],
         "twitter_url": [
             {
                 "type": "static",
-                "value": "https://twitter.com/example"
+                "value": [
+                    "https://twitter.com/example"
+                ]
             }
         ],
         "invalid_contact_id": [
             {
                 "type": "static",
-                "value": 9999999999
+                "value": [
+                    9999999999
+                ]
             }
         ],
         "empty_string": [
             {
                 "type": "static",
-                "value": ""
+                "value": [
+                    ""
+                ]
             }
         ],
         "null_value": [
             {
                 "type": "static",
-                "value": null
+                "value": [
+                    null
+                ]
             }
         ]
     }

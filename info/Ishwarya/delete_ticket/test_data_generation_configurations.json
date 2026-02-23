@@ -1,25 +1,56 @@
 {
     "generators": {
+        "department_id": [
+            {
+                "type": "dynamic",
+                "name": "department",
+                "generatorOperationId": "support.Department.getDepartments",
+                "dataPath": "$.response.body:$.data[0].id"
+            }
+        ],
+        "contact_id": [
+            {
+                "type": "dynamic",
+                "name": "contact",
+                "generatorOperationId": "support.Contact.getContacts",
+                "dataPath": "$.response.body:$.data[0].id"
+            }
+        ],
+        "agent_id": [
+            {
+                "type": "dynamic",
+                "name": "agent",
+                "generatorOperationId": "support.Agent.getAgents",
+                "dataPath": "$.response.body:$.data[0].id"
+            }
+        ],
         "ticket_id_1": [
             {
                 "type": "dynamic",
+                "name": "ticket",
                 "generatorOperationId": "support.Ticket.createTicket",
                 "params": {
-                    "departmentId": "../Department/test_data_generation_configurations.json#/generators/department_id",
-                    "contactId": "../Contact/test_data_generation_configurations.json#/generators/contact_id",
-                    "assigneeId": "../Agent/test_data_generation_configurations.json#/generators/agent_id"
+                    "departmentId": "$department_id.value",
+                    "contactId": "$contact_id.value",
+                    "assigneeId": "$agent_id.value"
                 },
                 "dataPath": "$.response.body:$.id"
+            },
+            {
+                "type": "reference",
+                "ref": "$.response.body:$.id",
+                "name": "ticket"
             }
         ],
         "ticket_id_2": [
             {
                 "type": "dynamic",
+                "name": "ticket",
                 "generatorOperationId": "support.Ticket.createTicket",
                 "params": {
-                    "departmentId": "../Department/test_data_generation_configurations.json#/generators/department_id",
-                    "contactId": "../Contact/test_data_generation_configurations.json#/generators/contact_id",
-                    "assigneeId": "../Agent/test_data_generation_configurations.json#/generators/agent_id"
+                    "departmentId": "$department_id.value",
+                    "contactId": "$contact_id.value",
+                    "assigneeId": "$agent_id.value"
                 },
                 "dataPath": "$.response.body:$.id"
             }
@@ -27,11 +58,12 @@
         "ticket_id_3": [
             {
                 "type": "dynamic",
+                "name": "ticket",
                 "generatorOperationId": "support.Ticket.createTicket",
                 "params": {
-                    "departmentId": "../Department/test_data_generation_configurations.json#/generators/department_id",
-                    "contactId": "../Contact/test_data_generation_configurations.json#/generators/contact_id",
-                    "assigneeId": "../Agent/test_data_generation_configurations.json#/generators/agent_id"
+                    "departmentId": "$department_id.value",
+                    "contactId": "$contact_id.value",
+                    "assigneeId": "$agent_id.value"
                 },
                 "dataPath": "$.response.body:$.id"
             }
@@ -39,11 +71,12 @@
         "ticket_id_4": [
             {
                 "type": "dynamic",
+                "name": "ticket",
                 "generatorOperationId": "support.Ticket.createTicket",
                 "params": {
-                    "departmentId": "../Department/test_data_generation_configurations.json#/generators/department_id",
-                    "contactId": "../Contact/test_data_generation_configurations.json#/generators/contact_id",
-                    "assigneeId": "../Agent/test_data_generation_configurations.json#/generators/agent_id"
+                    "departmentId": "$department_id.value",
+                    "contactId": "$contact_id.value",
+                    "assigneeId": "$agent_id.value"
                 },
                 "dataPath": "$.response.body:$.id"
             }
@@ -51,11 +84,12 @@
         "ticket_id_5": [
             {
                 "type": "dynamic",
+                "name": "ticket",
                 "generatorOperationId": "support.Ticket.createTicket",
                 "params": {
-                    "departmentId": "../Department/test_data_generation_configurations.json#/generators/department_id",
-                    "contactId": "../Contact/test_data_generation_configurations.json#/generators/contact_id",
-                    "assigneeId": "../Agent/test_data_generation_configurations.json#/generators/agent_id"
+                    "departmentId": "$department_id.value",
+                    "contactId": "$contact_id.value",
+                    "assigneeId": "$agent_id.value"
                 },
                 "dataPath": "$.response.body:$.id"
             }
@@ -63,11 +97,12 @@
         "ticket_id_6": [
             {
                 "type": "dynamic",
+                "name": "ticket",
                 "generatorOperationId": "support.Ticket.createTicket",
                 "params": {
-                    "departmentId": "../Department/test_data_generation_configurations.json#/generators/department_id",
-                    "contactId": "../Contact/test_data_generation_configurations.json#/generators/contact_id",
-                    "assigneeId": "../Agent/test_data_generation_configurations.json#/generators/agent_id"
+                    "departmentId": "$department_id.value",
+                    "contactId": "$contact_id.value",
+                    "assigneeId": "$agent_id.value"
                 },
                 "dataPath": "$.response.body:$.id"
             }
@@ -75,11 +110,12 @@
         "ticket_id_7": [
             {
                 "type": "dynamic",
+                "name": "ticket",
                 "generatorOperationId": "support.Ticket.createTicket",
                 "params": {
-                    "departmentId": "../Department/test_data_generation_configurations.json#/generators/department_id",
-                    "contactId": "../Contact/test_data_generation_configurations.json#/generators/contact_id",
-                    "assigneeId": "../Agent/test_data_generation_configurations.json#/generators/agent_id"
+                    "departmentId": "$department_id.value",
+                    "contactId": "$contact_id.value",
+                    "assigneeId": "$agent_id.value"
                 },
                 "dataPath": "$.response.body:$.id"
             }
@@ -87,11 +123,12 @@
         "ticket_id_8": [
             {
                 "type": "dynamic",
+                "name": "ticket",
                 "generatorOperationId": "support.Ticket.createTicket",
                 "params": {
-                    "departmentId": "../Department/test_data_generation_configurations.json#/generators/department_id",
-                    "contactId": "../Contact/test_data_generation_configurations.json#/generators/contact_id",
-                    "assigneeId": "../Agent/test_data_generation_configurations.json#/generators/agent_id"
+                    "departmentId": "$department_id.value",
+                    "contactId": "$contact_id.value",
+                    "assigneeId": "$agent_id.value"
                 },
                 "dataPath": "$.response.body:$.id"
             }
@@ -99,11 +136,12 @@
         "ticket_id_9": [
             {
                 "type": "dynamic",
+                "name": "ticket",
                 "generatorOperationId": "support.Ticket.createTicket",
                 "params": {
-                    "departmentId": "../Department/test_data_generation_configurations.json#/generators/department_id",
-                    "contactId": "../Contact/test_data_generation_configurations.json#/generators/contact_id",
-                    "assigneeId": "../Agent/test_data_generation_configurations.json#/generators/agent_id"
+                    "departmentId": "$department_id.value",
+                    "contactId": "$contact_id.value",
+                    "assigneeId": "$agent_id.value"
                 },
                 "dataPath": "$.response.body:$.id"
             }
@@ -111,11 +149,12 @@
         "ticket_id_10": [
             {
                 "type": "dynamic",
+                "name": "ticket",
                 "generatorOperationId": "support.Ticket.createTicket",
                 "params": {
-                    "departmentId": "../Department/test_data_generation_configurations.json#/generators/department_id",
-                    "contactId": "../Contact/test_data_generation_configurations.json#/generators/contact_id",
-                    "assigneeId": "../Agent/test_data_generation_configurations.json#/generators/agent_id"
+                    "departmentId": "$department_id.value",
+                    "contactId": "$contact_id.value",
+                    "assigneeId": "$agent_id.value"
                 },
                 "dataPath": "$.response.body:$.id"
             }
@@ -123,6 +162,7 @@
         "delete_tickets": [
             {
                 "type": "dynamic",
+                "name": "ticket",
                 "generatorOperationId": "support.Ticket.moveToTrash",
                 "params": {
                     "ticketIds": [

@@ -3,6 +3,7 @@
         "user_id_1": [
             {
                 "type": "dynamic",
+                "name": "user",
                 "generatorOperationId": "support.User.createUser",
                 "params": {
                     "email": "user1@example.com",
@@ -15,6 +16,7 @@
         "user_id_2": [
             {
                 "type": "dynamic",
+                "name": "user",
                 "generatorOperationId": "support.User.createUser",
                 "params": {
                     "email": "user2@example.com",
@@ -27,6 +29,7 @@
         "user_id_3": [
             {
                 "type": "dynamic",
+                "name": "user",
                 "generatorOperationId": "support.User.createUser",
                 "params": {
                     "email": "user3@example.com",
@@ -39,6 +42,7 @@
         "user_id_4": [
             {
                 "type": "dynamic",
+                "name": "user",
                 "generatorOperationId": "support.User.createUser",
                 "params": {
                     "email": "user4@example.com",
@@ -51,6 +55,7 @@
         "user_id_5": [
             {
                 "type": "dynamic",
+                "name": "user",
                 "generatorOperationId": "support.User.createUser",
                 "params": {
                     "email": "user5@example.com",
@@ -63,6 +68,7 @@
         "user_id_6": [
             {
                 "type": "dynamic",
+                "name": "user",
                 "generatorOperationId": "support.User.createUser",
                 "params": {
                     "email": "user6@example.com",
@@ -75,6 +81,7 @@
         "user_id_7": [
             {
                 "type": "dynamic",
+                "name": "user",
                 "generatorOperationId": "support.User.createUser",
                 "params": {
                     "email": "user7@example.com",
@@ -87,6 +94,7 @@
         "user_id_8": [
             {
                 "type": "dynamic",
+                "name": "user",
                 "generatorOperationId": "support.User.createUser",
                 "params": {
                     "email": "user8@example.com",
@@ -99,6 +107,7 @@
         "user_id_9": [
             {
                 "type": "dynamic",
+                "name": "user",
                 "generatorOperationId": "support.User.createUser",
                 "params": {
                     "email": "user9@example.com",
@@ -111,6 +120,7 @@
         "user_id_10": [
             {
                 "type": "dynamic",
+                "name": "user",
                 "generatorOperationId": "support.User.createUser",
                 "params": {
                     "email": "user10@example.com",
@@ -123,6 +133,7 @@
         "remove_users": [
             {
                 "type": "dynamic",
+                "name": "user",
                 "generatorOperationId": "support.User.deleteUsers",
                 "params": {
                     "userIds": [
