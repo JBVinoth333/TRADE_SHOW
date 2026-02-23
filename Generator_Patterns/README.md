@@ -95,4 +95,24 @@ Examples:
 - Do not add fields that are not present in OAS.
 - Do not modify existing generators unless explicitly requested.
 
+## Reference Syntax
+
+```
+$<generatorname>.value                    // Generator reference
+$.input.body:$.fieldName                  // Request body
+$.input.query:$.paramName                 // Query parameter
+$.input.path:$.pathParam                  // URL path
+$.input.header:$.HeaderName               // HTTP header
+```
+
+## DataPath Format
+
+```
+$.response.body:$.data[0].id              // First item ID
+$.response.body:$.data[*].id              // All item IDs
+$.response.body:$.id                      // Direct ID field
+$.response.body:$.manager.id              // Nested field
+$.response.body:$.items[?(@.status == 'active')].id  // Filtered values
+```
+
 Last updated: 23 February 2026
