@@ -1,69 +1,98 @@
 # Data Generation Framework
 
-## Description
+## What is this?
 
-This project is a framework for generating test data for OpenAPI specifications. It allows you to reuse existing generators and OAS files to quickly build new generators for your APIs.
+This framework helps you generate test data for APIs defined in OpenAPI (OAS) files.
 
-## Table of Contents
+In simple words:
+- You define generators in JSON.
+- Generators call APIs, reuse values, and build input data.
+- You can chain generators when one value depends on another.
 
-- [Data Generation Framework](#data-generation-framework)
-  - [Description](#description)
-  - [Table of Contents](#table-of-contents)
-  - [Usage](#usage)
-    - [Path Configurations](#path-configurations)
-    - [Basic Generator Structure](#basic-generator-structure)
-  - [Features](#features)
-  - [Generator Types](#generator-types)
-    - [JSONPath Syntax](#jsonpath-syntax)
+## What is a generator?
 
-## Usage
+A generator is a small JSON step that produces data.
 
-### Path Configurations
+Examples:
+- Fetch `departmentId` from an API response
+- Reuse a value from request input
+- Set a fixed value like `priority = "high"`
 
- **Generator configuration files:**
-   See `PathConfig.properties` → `GENERATOR_CONFIG_PATH`
-   Example: Replace `EntityName` with your entity, e.g., `Ticket`
- **OpenAPI Specifications (OAS) files:**
-   See `PathConfig.properties` → `OAS_FILE_PATH`
-   Example: Replace `EntityName` with your entity, e.g., `Ticket`
+All generators must be inside the `generators` object.
 
-Refer to these paths for the latest and correct locations of generator configuration files and OAS files.
-
-### Basic Generator Structure
+Basic format:
 
 ```json
 {
   "generators": {
-    "generator_id": [ { "type": "...", ...properties... } ]
+    "generator_name": [
+      {
+        "type": "..."
+      }
+    ]
   }
 }
 ```
 
-## Features
+## About the Generator Agent
 
-- Generate test data for OpenAPI specifications
-- Reuse and reference generators across entities
-- Support for multiple generator types (Dynamic, Remote, Static, Reference, Conditional)
-- Flexible path and naming conventions
+The Generator Agent helps developers create generator files faster and correctly.
 
-## Generator Types
+The agent does the following:
+- Reads the target operation from OAS
+- Finds required dependencies from related operations
+- Creates generator steps in the correct dependency order
+- Uses only fields that exist in OAS (no invented params)
+- Produces output in the required `generators` JSON structure
 
-| Type                            | Purpose               | When to Use                        |
-| ------------------------------- | --------------------- | ---------------------------------- |
-| [Dynamic](./dynamic.md)         | Fetch IDs from APIs   | Get actual system data             |
-| [Remote](./remote.md)           | Call system functions | Timestamps, enums, system values   |
-| [Static](./static.md)           | Fixed constant values | Predetermined values               |
-| [Reference](./reference.md)     | Use request data      | Pass-through from incoming request |
-| [Conditional](./conditional.md) | Logic-based branching | Value depends on conditions        |
+## Where to find paths
 
-### JSONPath Syntax
+Use `PathConfig.properties` as the source of truth:
+- `GENERATOR_CONFIG_PATH` for generator file locations
+- `OAS_FILE_PATH` for OpenAPI specification locations
 
-Format: `$.location:$.path`
+Always use these configured paths instead of hardcoding paths.
 
-Common patterns:
-- `$.data[*].id` - All IDs from array
-- `$.data[0].id` - First element only
-- `$.manager.id` - Nested field
-- `$.users[?(@.active == true)].id` - Filtered results
+## Generator types
 
-*Last Updated: 18 February 2026**ss*
+Use the right type based on your need:
+
+| Type | Purpose | Documentation |
+| --- | --- | --- |
+| Dynamic | Get values from API operations | [Dynamic](./Dynamic.md) |
+| Remote | Get values from system/remote helpers | [Remote](./Remote.md) |
+| Static | Use fixed constant values | [Static](./Static.md) |
+| Reference | Reuse existing values from input/other generators | [Reference](./Reference.md) |
+| Conditional | Choose values based on conditions | [Conditional](./Conditional.md) |
+
+## JSONPath quick guide
+
+Common response mapping format:
+
+`$.location:$.path`
+
+Examples:
+- `$.data[*].id` → all ids in an array
+- `$.data[0].id` → first id
+- `$.manager.id` → nested value
+- `$.users[?(@.active == true)].id` → filtered values
+
+## Developer workflow (quick)
+
+1. Identify the target API operation.
+2. Read the target operation in OAS.
+3. Identify dependency operations and required values.
+4. Choose proper generator types.
+5. Create a new generator file in the correct folder.
+6. Keep dependencies in order inside the same generator array.
+7. Validate all params and paths against OAS.
+
+## Important rules
+
+- Use snake_case generator names.
+- Keep names meaningful and short.
+- Use singular for single value, plural for list values.
+- Do not add fields that are not present in OAS.
+- Do not modify existing generators unless explicitly requested.
+
+Last updated: 23 February 2026
