@@ -2,15 +2,10 @@
 
 ## 1) Purpose
 
-This framework generates API test data from OpenAPI definitions by combining:
-- OpenAPI specs for support and portal services
-- generator configs used by existing entities
-- generator pattern rules in `Generator_Patterns/*`
-- creation rules in `.github/agents/Generators.agent.md`
+This framework helps developers generate test data for APIs quickly and consistently. It supports:
 
-It supports two practical outputs:
 - **Operational mapping configs** for API test execution (`apis` + `generators`)
-- **Scenario creation configs** under `Created_Generators/*` (`generators` only)
+- **Scenario configs** for chained setup flows (`generators` only)
 
 ---
 
@@ -140,38 +135,164 @@ Meaning:
 
 ---
 
-## 5) Generator Types (Authoritative Set)
+## 5) Developer Quickstart (Create a Generator in 5 Steps)
 
-From `Generator_Patterns/*`, exactly five types are supported:
-
-1. **dynamic**
-   - Fetches real data from API operations.
-   - Required: `type`, `generatorOperationId`, `dataPath`
-   - Optional: `params`, `name`
-
-2. **remote**
-   - Calls framework/system providers (timestamps, enums, schema values).
-   - Required: `type`, `generatorMethod`, `inputs`
-   - Optional: `name`
-
-3. **static**
-   - Fixed constant values.
-   - Required: `type`, `value`
-   - Optional: `name`
-
-4. **reference**
-   - Pulls values from incoming request (`body/query/path/header`).
-   - Required: `type`, `ref`
-   - Optional: `name`
-
-5. **conditional**
-   - Rule-based branch between values/generators.
-   - Required: `type`, `conditions`
-   - Optional: `else`
+1. Pick the target API operation (`operationId`) in the OpenAPI spec.
+2. List required inputs (query/path/body/header).
+3. Add dependency generators first (department, contact, agent, etc.).
+4. Use only OAS-defined fields in `params`.
+5. Validate references and JSONPaths before running.
 
 ---
 
-## 6) Syntax Rules You Must Follow
+## 6) Generator Types (Easy-to-Read Definitions)
+
+Below are the five supported generator types with clear purpose, required fields, and examples.
+
+### 6.1 Dynamic
+
+**Purpose:** Fetch real system data by calling an API operation.
+
+**Required fields:**
+- `type`: "dynamic"
+- `generatorOperationId`
+- `dataPath`
+
+**Optional fields:**
+- `params`
+- `name`
+
+**Example (fetch department IDs):**
+
+```json
+{
+  "type": "dynamic",
+  "name": "departments",
+  "generatorOperationId": "support.Department.getDepartments",
+  "dataPath": "$.response.body:$.data[*].id",
+  "params": {
+    "isEnabled": true
+  }
+}
+```
+
+**Dependency rule:**
+When a dynamic generator depends on another generator, always reference the value as `$<name>.value`.
+
+```json
+{
+  "type": "dynamic",
+  "name": "ticket",
+  "generatorOperationId": "support.Ticket.createTicket",
+  "dataPath": "$.response.body:$.id",
+  "params": {
+    "departmentId": "$departments.value",
+    "contactId": "$contact.value",
+    "subject": "Test ticket"
+  }
+}
+```
+
+### 6.2 Remote
+
+**Purpose:** Call system functions to generate timestamps, enums, and schema values.
+
+**Required fields:**
+- `type`: "remote"
+- `generatorMethod`
+- `inputs`
+
+**Optional fields:**
+- `name`
+
+**Example (enum values):**
+
+```json
+{
+  "type": "remote",
+  "generatorMethod": "applicationDriver.rpc.desk.DynamicDataProvider.getDynamicEnumValues",
+  "inputs": {
+    "fieldName": "priority",
+    "moduleName": "Ticket",
+    "orgId": "16977187"
+  }
+}
+```
+
+### 6.3 Static
+
+**Purpose:** Use fixed, constant values.
+
+**Required fields:**
+- `type`: "static"
+- `value`
+
+**Optional fields:**
+- `name`
+
+**Example:**
+
+```json
+{
+  "type": "static",
+  "value": "OPEN"
+}
+```
+
+### 6.4 Reference
+
+**Purpose:** Pass values directly from incoming request data.
+
+**Required fields:**
+- `type`: "reference"
+- `ref`
+
+**Optional fields:**
+- `name`
+
+**Example (path param):**
+
+```json
+{
+  "type": "reference",
+  "ref": "$.input.path:$.ticketId"
+}
+```
+
+### 6.5 Conditional
+
+**Purpose:** Choose a generator based on input conditions.
+
+**Required fields:**
+- `type`: "conditional"
+- `conditions`
+
+**Optional fields:**
+- `else`
+
+**Example:**
+
+```json
+{
+  "type": "conditional",
+  "conditions": [
+    {
+      "when": {
+        "key": "$.input.query:modules",
+        "equals": "tickets"
+      },
+      "then": {
+        "use": "$generators:#/generators/ticket_id"
+      }
+    }
+  ],
+  "else": "$generators:#/generators/contact_id"
+}
+```
+
+---
+
+## 7) Syntax Rules You Must Follow
 
 ### 6.1 JSONPath format
 
@@ -212,7 +333,7 @@ Examples:
 
 ---
 
-## 7) OAS-Driven Generation Process
+## 8) OAS-Driven Generation Process
 
 The required workflow (from agent rules + current file patterns):
 
@@ -230,7 +351,7 @@ Validation checkpoint:
 
 ---
 
-## 8) Naming and Ordering Conventions
+## 9) Naming and Ordering Conventions
 
 From agent and instruction files:
 - Use **snake_case** names.
@@ -243,7 +364,7 @@ Additional practical convention in core files:
 
 ---
 
-## 9) Practical Patterns Seen in Existing Files
+## 10) Practical Patterns Seen in Existing Files
 
 ### 9.1 Ticket creation chain
 Observed in `Created_Generators/CreateTicket/*` and `CreateTenTickets/*`:
@@ -269,7 +390,7 @@ Observed across support/portal runtime configs:
 
 ---
 
-## 10) Agent Contract Summary
+## 11) Agent Contract Summary
 
 From `.github/agents/Generators.agent.md`:
 - read patterns first, then OAS, then build generators
@@ -280,7 +401,7 @@ From `.github/agents/Generators.agent.md`:
 
 ---
 
-## 11) Common Pitfalls to Avoid
+## 12) Common Pitfalls to Avoid
 
 1. Missing `$` in dependency reference (must be `$name.value`).
 2. Using params not present in OAS operation schema.
@@ -291,7 +412,7 @@ From `.github/agents/Generators.agent.md`:
 
 ---
 
-## 12) Minimum Quality Checklist
+## 13) Minimum Quality Checklist
 
 Before finalizing any generator file:
 - [ ] Correct top-level structure for target use case (`generators` only vs `apis` + `generators`)
@@ -303,49 +424,55 @@ Before finalizing any generator file:
 
 ---
 
-## 13) Canonical Example Snippets
+## 14) Canonical Example Snippets
 
-### Dynamic dependency chain
+### Scenario chain (create + comment)
 
 ```json
 {
-  "type": "dynamic",
-  "name": "ticket",
-  "generatorOperationId": "support.Ticket.createTicket",
-  "dataPath": "$.response.body:$.id",
-  "params": {
-    "departmentId": "$departments.value",
-    "contactId": "$contact.value"
+  "generators": {
+    "create_ticket_with_comments": [
+      {
+        "type": "dynamic",
+        "generatorOperationId": "support.Department.getDepartments",
+        "dataPath": "$.response.body:$.data[*].id",
+        "name": "departments",
+        "params": { "isEnabled": true }
+      },
+      {
+        "type": "dynamic",
+        "generatorOperationId": "support.Contact.createContact",
+        "dataPath": "$.response.body:$.id",
+        "name": "contact"
+      },
+      {
+        "type": "dynamic",
+        "generatorOperationId": "support.Ticket.createTicket",
+        "dataPath": "$.response.body:$.id",
+        "name": "ticket",
+        "params": {
+          "departmentId": "$departments.value",
+          "contactId": "$contact.value",
+          "subject": "Test ticket"
+        }
+      },
+      {
+        "type": "dynamic",
+        "generatorOperationId": "support.TicketComment.createTicketComment",
+        "dataPath": "$.response.body:$.id",
+        "params": {
+          "ticketId": "$ticket.value",
+          "content": "First comment"
+        }
+      }
+    ]
   }
-}
-```
-
-### Remote enum value
-
-```json
-{
-  "type": "remote",
-  "generatorMethod": "applicationDriver.rpc.desk.DynamicDataProvider.getDynamicEnumValues",
-  "inputs": {
-    "fieldName": "priority",
-    "moduleName": "Ticket",
-    "orgId": "16977187"
-  }
-}
-```
-
-### Reference from path param
-
-```json
-{
-  "type": "reference",
-  "ref": "$.input.path:$.ticketId"
 }
 ```
 
 ---
 
-## 14) Final Notes
+## 15) Final Notes
 
 This documentation is derived from the current repository state across:
 - all files in `Generator_Patterns`
