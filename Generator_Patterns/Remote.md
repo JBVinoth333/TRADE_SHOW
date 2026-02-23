@@ -31,11 +31,6 @@ Use REMOTE when you need:
 | `generatorMethod` | string | System function to call |
 | `inputs` | object | Function parameters |
 
-## Optional Properties
-
-| Property | Type | Purpose |
-|----------|------|---------|
-| `name` | string | Generator identifier |
 
 ---
 

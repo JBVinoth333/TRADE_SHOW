@@ -24,20 +24,14 @@ Use STATIC when:
 | Property | Type   | Purpose            |
 | -------- | ------ | ------------------ |
 | `type`   | string | Must be `"static"` |
-| `value`  | any    | The constant value |
-
-## Optional Properties
-
-| Property | Type   | Purpose              |
-| -------- | ------ | -------------------- |
-| `name`   | string | Generator identifier |
+| `value`  | List[Any]    | A list of predefined values |
 
 ---
 
 ## Supported Value Types
 
 STATIC supports all JSON types:
-`value` accepts any valid JSON type (string, number, boolean, object, array, or null).
+`value` accepts any valid JSON type (string, number, boolean, object, array, list, or null).
 
 ---
 
