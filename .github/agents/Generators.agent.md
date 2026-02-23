@@ -75,9 +75,21 @@ All generators must be created using the following structure:
 
 ## Generator Creation Rules
 
-1. When creating a new generator file for different resources, always create a separate subfolder with the specified name inside the Created_Generators directory. Inside that subfolder, create a file named test_data_generation_configurations.json.
+1. Create subfolder with PascalCase name (e.g., `CreateContact`, `CreateTicket`) in `Created_Generators` directory, add `test_data_generation_configurations.json` inside.
 
-2. Always create a new generator file instead of modifying existing ones. If you need to edit or add to an existing generator file, request explicit permission and follow the instructions from the user responsible for that file.
+2. Only create the generator JSON file.
+
+3. Always create new generator files instead of modifying existing ones. Request explicit permission before editing existing generators.
+
+---
+
+## Prompt Handling Rules
+
+1. **Direct Prompt**: When user provides a direct prompt (e.g., "Create Contact", "Create Ticket"), implement the generator immediately without preamble like "Create generator for X".
+
+2. **Explicit Request**: When user explicitly says "Create a generator for X" or similar, proceed as normal with full context.
+
+3. **Skip Explanation**: For direct prompts, go straight to building the generator, no explanations.
 
 ---
 
