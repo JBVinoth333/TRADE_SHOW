@@ -20,9 +20,9 @@ Responsible for building generators that follow strict rules and guidelines base
 
 5. Refer to the `PathConfig.properties` file to find the paths for OAS files and existing generator files. Always use these paths when reading or referencing OAS or generator files.
 
-6.  Extract only the necessary schema details and dependencies from the OAS file to build generators. Do not include unnecessary information or fields that are not required for generator creation.
+6. Always read the OpenAPI Specification (OAS) for the target operation before creating a generator, and extract only required schema/dependency details.
 
-7.  If required schema information is missing in the OAS, ask the user for clarification before proceeding. Do not make assumptions or include fields that are not defined in the OAS.
+7. Use only parameters explicitly defined in that OAS operation (body, query, path, header). Never invent fields, wrapper keys, or placeholders. If required schema details are missing, ask the user instead of assuming.
 
 8.  You may use tools if necessary to generate the generators correctly.
 
@@ -91,7 +91,7 @@ All generators must be created using the following structure:
 
 4. Don't edit OpenAPI specification files.
 
-5.  Don't use params in a generator if the API doesn't have that parameter defined in the OpenAPI specification.
+5. Never include any param or field in a generator unless it is explicitly defined in the OAS for that operation.
 
 6. Don't ask permission for read access to OAS or generator files, as you have full access to read any file in the specified paths.You have permission to read files outside of the workspace.
 

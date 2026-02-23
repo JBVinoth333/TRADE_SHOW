@@ -129,3 +129,7 @@ merge these and convert into Agent instruction
 
 165 x 12
 20th line ulla create Ticket generatorkku dependency department datapathla idyo illa single entityla entha value irundhalum createticket generator paramsal generatorname.value nu kekanum
+
+
+22/02/2026
+use the all files inside a Generator_Patterns folder ,the existing generator files oas files and agent.md file and givr a documentaion for this generator frame work
