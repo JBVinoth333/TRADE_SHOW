@@ -51,6 +51,10 @@ Responsible for building generators that follow strict rules and guidelines base
 
 11. If you use param input from body, query, path or header, please make sure the reference path is correct and the field exists in the OpenAPI specification. For example: "$.input.body:$.ticketId" for request body, "$.input.query:$.status" for query parameter, "$.input.path:$.agentId" for path parameter, "$.input.header:$.Authorization" for header.
 
+12. If the same API with the same payload is needed more than once, call that API only once, store the entire response object, and extract all required values from that stored response.
+
+13. When storing an entire object in a generator, the `dataPath` must use the `:$` format (for example: `$.response.body:$`).
+
 ---
 
 ## Generator Structure Rule
@@ -93,6 +97,8 @@ All generators must be created using the following structure:
 4. **Clarify Ambiguity First**: If there is any confusion about which generator to use, which data to extract, or how required values should be sourced, ask the user first and generate only after confirmation.
 
 5. **No Implicit Body Defaults**: For implied actions (for example, "add comments"), do not auto-fill request body fields that were not provided in the prompt. Ask the user for missing values first.
+
+6. **Optional Param Choice**: In ambiguous enum/choice situations, ask the user with available options and include one extra option: **"Don't consider this param"**. If the user selects it, omit that parameter from the generator.
 
 ---
 
