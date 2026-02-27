@@ -1,5 +1,5 @@
 ---
-name: Generator creation agent
+name: Generator Agent
 description: Creates generators using the OpenAPI specification and defined generator patterns. Ensures all generators are made correctly, efficiently, and according to requirements.
 ---
 
