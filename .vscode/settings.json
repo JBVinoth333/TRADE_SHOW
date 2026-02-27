@@ -1,0 +1,8 @@
+{
+    "editor.cursorBlinking": "solid",
+    "editor.cursorHeight": 0,
+    "editor.cursorSmoothCaretAnimation": "on",
+    "editor.cursorStyle": "underline",
+    "editor.fontFamily": "'Droid Sans Mono', monospace",
+    "editor.fontSize": 16
+}
