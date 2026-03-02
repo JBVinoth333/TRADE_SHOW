@@ -25,6 +25,20 @@ A conditional generator contains:
 	- `then`: The generator or value to use if the condition matches
 - `else`: (optional) The generator or value to use if no conditions match
 
+## Required Properties
+
+| Property | Type | Purpose |
+|----------|------|---------|
+| `type` | string | Must be `"conditional"` |
+| `conditions` | array | List of condition objects with `when` and `then` |
+
+## Optional Properties
+
+| Property | Type | Purpose |
+|----------|------|---------|
+| `else` | object \| string | Fallback generator or value when no conditions match |
+| `name` | string | Generator identifier (unique label for referencing in params) |
+
 ---
 
 ## Example

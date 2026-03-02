@@ -29,7 +29,13 @@ Use REMOTE when you need:
 |----------|------|---------|
 | `type` | string | Must be `"remote"` |
 | `generatorMethod` | string | System function to call |
-| `inputs` | object | Function parameters |
+
+## Optional Properties
+
+| Property | Type | Purpose |
+|----------|------|---------|
+| `inputs` | object | Function parameters (method-specific) |
+| `name` | string | Generator identifier (unique label for referencing in params) |
 
 
 ---
