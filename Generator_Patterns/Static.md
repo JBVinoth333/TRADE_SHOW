@@ -26,6 +26,12 @@ Use STATIC when:
 | `type`   | string | Must be `"static"` |
 | `value`  | List[Any]    | A list of predefined values |
 
+## Optional Properties
+
+| Property | Type | Purpose |
+|----------|------|---------|
+| `name` | string | Generator identifier (unique label for referencing in params) |
+
 ---
 
 ## Supported Value Types

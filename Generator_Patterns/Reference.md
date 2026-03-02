@@ -31,6 +31,12 @@ A Reference Generator extracts data from previous API responses.- Using data fro
 | `type` | string | Must be `"reference"` |
 | `ref` | string | Path to request data |
 
+## Optional Properties
+
+| Property | Type | Purpose |
+|----------|------|---------|
+| `name` | string | Generator identifier (unique label for referencing in params) |
+
 ## Reference Path Format
 
 **Pattern:** `$.input.{location}:$.{jsonPath}`
